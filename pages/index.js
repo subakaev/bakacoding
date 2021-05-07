@@ -1,6 +1,9 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 
+console.log(process.env.VERCEL_ENV);
+console.log(process.env.NEXT_PUBLIC_VERCEL_ENV);
+
 export default function Home() {
   return (
     <div className={styles.container}>
@@ -12,6 +15,8 @@ export default function Home() {
       <main className={styles.main}>
         <h1 className={styles.title}>
           Test <a href="https://nextjs.org">Next.js!</a>
+          {process.env.VERCEL_ENV}
+          {process.env.NEXT_PUBLIC_VERCEL_ENV}
         </h1>
 
         <p className={styles.description}>
