@@ -1,5 +1,6 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
+import { getLayout } from "components/layouts/Layout";
 
 console.log(process.env.VERCEL_ENV);
 console.log(process.env.NEXT_PUBLIC_VERCEL_ENV);
@@ -68,3 +69,5 @@ export default function Home() {
     </div>
   );
 }
+
+Home.getLayout = getLayout;
