@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import _ from "lodash";
 import {
-  Paper,
   Button,
   Link as MuiLink,
   Accordion,
@@ -17,15 +16,13 @@ import {
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import MarkdownText from "./markdown/MarkdownText";
-import { getContentfulClient } from "lib/contentful";
+import { getEntryById } from "lib/contentful";
 
 interface ContentfulTrainerProps {
   ids: string[];
 }
 
 const ContentfulCodeTaskTrainer = (props: ContentfulTrainerProps) => {
-  const client = getContentfulClient();
-
   const [ids] = useState(_.shuffle(props.ids));
   const [index, setIndex] = useState(-1);
   const [loading, setLoading] = useState(false);
@@ -40,7 +37,7 @@ const ContentfulCodeTaskTrainer = (props: ContentfulTrainerProps) => {
       setLoading(true);
 
       try {
-        const data = await client.getEntry(ids[index]);
+        const data = await getEntryById(ids[index]);
         console.log(data); // TODO remove
         setEntry(data);
       } catch (e) {

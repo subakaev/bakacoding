@@ -1,4 +1,9 @@
-import { ContentfulClientApi, createClient } from "contentful";
+import {
+  ContentfulClientApi,
+  createClient,
+  EntryCollection,
+  Entry,
+} from "contentful";
 
 let client: ContentfulClientApi;
 
@@ -14,3 +19,17 @@ export const getContentfulClient = (): ContentfulClientApi => {
 
   return client;
 };
+
+export function getEntriesByTags<T>(
+  contentType: string,
+  tags: string[]
+): Promise<EntryCollection<T>> {
+  return getContentfulClient().getEntries<T>({
+    content_type: contentType,
+    "metadata.tags.sys.id[in]": tags.join(","),
+  });
+}
+
+export function getEntryById<T>(id: string): Promise<Entry<T>> {
+  return getContentfulClient().getEntry(id);
+}
