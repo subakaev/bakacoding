@@ -16,6 +16,7 @@ import {
   AccordionSummary,
   AccordionDetails,
   Box,
+  Link as MuiLink,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import MarkdownText from "components/markdown/MarkdownText";
@@ -101,6 +102,13 @@ const BfeCoding = (
         <CardContent>
           <Box my={2}>
             <MarkdownText text={entry.fields.task} />
+          </Box>
+          <Box my={5}>
+            <MuiLink href={entry.fields.link} target="__blank" rel="noreferrer">
+              <Button variant="contained" color="primary">
+                Go to problem
+              </Button>
+            </MuiLink>
           </Box>
           {entry.fields.javascript.map((solution: any /* TODO */) => {
             return (
