@@ -2,12 +2,17 @@ import { getLayout } from "components/layouts/Layout";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import _ from "lodash";
 import { getContentfulClient } from "lib/contentful";
-import ContentfulTrainer from "components/ContentfulTrainer";
+import ContentfulCodeTaskTrainer from "components/ContentfulCodeTaskTrainer";
+import { Paper } from "@material-ui/core";
 
 const BfeCoding = (
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) => {
-  return <ContentfulTrainer ids={props.ids} />;
+  return (
+    <Paper>
+      <ContentfulCodeTaskTrainer ids={props.ids} />
+    </Paper>
+  );
 };
 
 BfeCoding.getLayout = getLayout;
