@@ -6,6 +6,7 @@ import {
   Toolbar,
   Typography,
   makeStyles,
+  Container,
 } from "@material-ui/core";
 import { FunctionComponent } from "react";
 import Link from "next/link";
@@ -38,7 +39,7 @@ const Layout: FunctionComponent = ({ children }) => {
           </Box>
         </Toolbar>
       </AppBar>
-      <div>{children}</div>
+      <Container maxWidth="lg" children={children as any} />
     </div>
   );
 };
