@@ -17,6 +17,7 @@ import {
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import MarkdownText from "./markdown/MarkdownText";
 import { getEntryById } from "lib/contentful";
+import CodeTaskSolution from "./CodeTaskSolution";
 
 interface ContentfulTrainerProps {
   ids: string[];
@@ -115,26 +116,19 @@ const ContentfulCodeTaskTrainer = (props: ContentfulTrainerProps) => {
             </Button>
           </MuiLink>
         </Box>
-        {entry.fields.javascript.map((solution: any /* TODO */) => {
+        {entry.fields.javascript?.map((solution: any /* TODO */) => {
           return (
-            <Accordion key={solution.sys.id}>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls={`${solution.sys.id}-content`}
-                id={`${solution.sys.id}-header`}
-              >
-                <Typography variant="subtitle1">
-                  {solution.fields.title}
-                </Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Box>
-                  <MarkdownText text={solution.fields.code} />
-                </Box>
-              </AccordionDetails>
-            </Accordion>
+            <CodeTaskSolution
+              key={solution.sys.id}
+              id={solution.sys.id}
+              title={solution.fields.title}
+              text={solution.fields.code}
+            />
           );
         })}
+        {entry.fields.answer && (
+          <CodeTaskSolution id="answer" text={entry.fields.answer} />
+        )}
       </CardContent>
       <CardActions>
         <Button onClick={goToPreviousClickHandler}>Previous</Button>

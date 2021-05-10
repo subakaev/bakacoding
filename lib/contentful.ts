@@ -20,13 +20,16 @@ export const getContentfulClient = (): ContentfulClientApi => {
   return client;
 };
 
+export type TagMode = "all" | "in";
+
 export function getEntriesByTags<T>(
   contentType: string,
-  tags: string[]
+  tags: string[],
+  mode: TagMode = "all"
 ): Promise<EntryCollection<T>> {
   return getContentfulClient().getEntries<T>({
     content_type: contentType,
-    "metadata.tags.sys.id[in]": tags.join(","),
+    [`metadata.tags.sys.id[${mode}]`]: tags.join(","),
   });
 }
 
