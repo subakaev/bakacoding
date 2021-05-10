@@ -102,20 +102,26 @@ const BfeCoding = (
           <Box my={2}>
             <MarkdownText text={entry.fields.task} />
           </Box>
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography variant="subtitle1">Show answer</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Box>
-                <MarkdownText text={entry.fields.javascript[0].fields.code} />
-              </Box>
-            </AccordionDetails>
-          </Accordion>
+          {entry.fields.javascript.map((solution: any /* TODO */) => {
+            return (
+              <Accordion key={solution.sys.id}>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls={`${solution.sys.id}-content`}
+                  id={`${solution.sys.id}-header`}
+                >
+                  <Typography variant="subtitle1">
+                    {solution.fields.title}
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Box>
+                    <MarkdownText text={solution.fields.code} />
+                  </Box>
+                </AccordionDetails>
+              </Accordion>
+            );
+          })}
         </CardContent>
         <CardActions>
           <Button onClick={goToPreviousClickHandler}>Previous</Button>
