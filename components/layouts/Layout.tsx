@@ -39,7 +39,9 @@ const Layout: FunctionComponent = ({ children }) => {
           </Box>
         </Toolbar>
       </AppBar>
-      <Container maxWidth="lg" children={children as any} />
+      <Container maxWidth="lg">
+        <Box my={3}>{children}</Box>
+      </Container>
     </div>
   );
 };
