@@ -29,19 +29,19 @@ Bfe.getLayout = getLayout;
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const client = createClient({
-    space: process.env.CONTENTFUL_SPACE_ID ?? "",
-    accessToken: process.env.CONTENTFUL_PREVIEW_API_ACCESS_TOKEN ?? "",
-    host: "preview.contentful.com",
-  });
+  // const client = createClient({
+  //   space: process.env.CONTENTFUL_SPACE_ID ?? "",
+  //   accessToken: process.env.CONTENTFUL_PREVIEW_API_ACCESS_TOKEN ?? "",
+  //   host: "preview.contentful.com",
+  // });
 
-  const data = await client.getEntries({
-    content_type: "codeTask",
-    "metadata.tags.sys.id[in]": "bfe",
-  });
+  // const data = await client.getEntries({
+  //   content_type: "codeTask",
+  //   "metadata.tags.sys.id[in]": "bfe",
+  // });
 
   return {
-    props: { data },
+    props: { data: {} },
   };
 };
 

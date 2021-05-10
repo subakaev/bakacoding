@@ -18,6 +18,7 @@ import {
   Box,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import MarkdownText from "components/markdown/MarkdownText";
 
 const client = createClient({
   space: process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID ?? "",
@@ -44,10 +45,10 @@ const BfeCoding = (
 
       try {
         const data = await client.getEntry(ids[index]);
-        console.log(data);
+        console.log(data); // TODO remove
         setEntry(data);
       } catch (e) {
-        console.error(e);
+        console.error(e); // TODO log
       } finally {
         setLoading(false);
       }
@@ -99,9 +100,7 @@ const BfeCoding = (
         <CardHeader title={entry.fields.name} />
         <CardContent>
           <Box my={2}>
-            <Typography component="div" variant="body1">
-              {entry.fields.task}
-            </Typography>
+            <MarkdownText text={entry.fields.task} />
           </Box>
           <Accordion>
             <AccordionSummary
@@ -112,9 +111,9 @@ const BfeCoding = (
               <Typography variant="subtitle1">Show answer</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography component="div" variant="body2">
-                {entry.fields.javascript[0].fields.code}
-              </Typography>
+              <Box>
+                <MarkdownText text={entry.fields.javascript[0].fields.code} />
+              </Box>
             </AccordionDetails>
           </Accordion>
         </CardContent>
