@@ -22,6 +22,12 @@ export const getContentfulClient = (): ContentfulClientApi => {
 
 export type TagMode = "all" | "in";
 
+export function getEntries<T>(
+  contentType: string
+): Promise<EntryCollection<T>> {
+  return getContentfulClient().getEntries<T>({ content_type: contentType });
+}
+
 export function getEntriesByTags<T>(
   contentType: string,
   tags: string[],

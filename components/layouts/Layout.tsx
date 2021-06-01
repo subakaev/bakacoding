@@ -36,6 +36,9 @@ const Layout: FunctionComponent = ({ children }) => {
             <Link href="/bfe" passHref>
               <Button color="inherit">BFE</Button>
             </Link>
+            <Link href="/js" passHref>
+              <Button color="inherit">JS</Button>
+            </Link>
           </Box>
         </Toolbar>
       </AppBar>
