@@ -33,6 +33,9 @@ const Layout: FunctionComponent = ({ children }) => {
           </Link>
 
           <Box ml={3} display="flex">
+            <Link href="/cs" passHref>
+              <Button color="inherit">CS</Button>
+            </Link>
             <Link href="/bfe" passHref>
               <Button color="inherit">BFE</Button>
             </Link>

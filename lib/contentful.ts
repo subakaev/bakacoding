@@ -31,11 +31,15 @@ export function getEntries<T>(
 export function getEntriesByTags<T>(
   contentType: string,
   tags: string[],
-  mode: TagMode = "all"
+  mode: TagMode = "all",
+  params?: any
 ): Promise<EntryCollection<T>> {
   return getContentfulClient().getEntries<T>({
     content_type: contentType,
-    [`metadata.tags.sys.id[${mode}]`]: tags.join(","),
+    ...(tags.length > 0 && {
+      [`metadata.tags.sys.id[${mode}]`]: tags.join(","),
+    }),
+    ...(params && params),
   });
 }
 
