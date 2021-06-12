@@ -9,11 +9,11 @@ import {
   Chip,
   Box,
   CircularProgress,
-  List,
-  ListItem,
-  ListItemText,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from "@material-ui/core";
-import DoneIcon from "@material-ui/icons/Done";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { ToggleButton } from "@material-ui/lab";
 import { useState } from "react";
 import { getEntriesByTags } from "lib/contentful";
@@ -21,38 +21,20 @@ import Link from "next/link";
 import { Typography } from "@material-ui/core";
 import { CardHeader } from "@material-ui/core";
 import MarkdownText from "components/markdown/MarkdownText";
+import initialTags, { ContentfulTag } from "lib/tags";
 
-interface Tag {
-  id: string;
-  name: string;
+interface Tag extends ContentfulTag {
   active: boolean;
 }
 
-const initialTags: Tag[] = [
-  { id: "backToBackSwe", name: "Back to back SWE", active: false },
-  { id: "primitives", name: "Primitives", active: false },
-];
-
-interface TagProps {
-  label: string;
-  onClick: () => void;
-  active?: boolean;
-}
-
-const Tag = ({ label, onClick, active = false }: TagProps) => {
-  return (
-    <Chip
-      size="small"
-      label={label}
-      onClick={onClick}
-      color={active ? "primary" : "default"}
-    />
-  );
-};
+const TagsPanel = () => {};
 
 const Cs = () => {
   const [tags, setTags] = useState<{ [id: string]: Tag }>(
-    initialTags.reduce((acc, tag) => ({ ...acc, [tag.id]: tag }), {})
+    initialTags.reduce(
+      (acc, tag) => ({ ...acc, [tag.id]: { ...tag, active: false } }),
+      {}
+    )
   );
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
@@ -110,16 +92,17 @@ const Cs = () => {
   };
 
   return (
-    <Paper>
+    <Box>
       <Card>
         <CardContent>
           {Object.values(tags).map((tag) => {
             return (
               <Box mr={1} component="span">
-                <Tag
+                <Chip
+                  size="small"
                   label={tag.name}
                   onClick={createOnTagToggleHandler(tag.id)}
-                  active={tag.active}
+                  color={tag.active ? "primary" : "default"}
                 />
               </Box>
             );
@@ -147,13 +130,45 @@ const Cs = () => {
               <CardContent>
                 <MarkdownText text={current.fields.question} />
 
-                <MarkdownText text={current.fields.javaScriptSolution} />
+                {current.fields.hints.map((hint: string, idx: number) => {
+                  return (
+                    <Box mt={2} key={idx}>
+                      <Accordion>
+                        <AccordionSummary
+                          expandIcon={<ExpandMoreIcon />}
+                          aria-controls={`panel${idx}-content`}
+                          id={`panel${idx}-header`}
+                        >
+                          <Typography>Show hint {idx + 1}</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                          <Typography>{hint}</Typography>
+                        </AccordionDetails>
+                      </Accordion>
+                    </Box>
+                  );
+                })}
+
+                <Box mt={2}>
+                  <Accordion>
+                    <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      aria-controls="javascript-content"
+                      id="javascript-header"
+                    >
+                      <Typography>Show solution</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails style={{ display: "block" }}>
+                      <MarkdownText text={current.fields.javaScriptSolution} />
+                    </AccordionDetails>
+                  </Accordion>
+                </Box>
               </CardContent>
             </Card>
           )}
         </Box>
       )}
-    </Paper>
+    </Box>
   );
 };
 
