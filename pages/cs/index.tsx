@@ -130,7 +130,7 @@ const Cs = () => {
               <CardContent>
                 <MarkdownText text={current.fields.question} />
 
-                {current.fields.hints.map((hint: string, idx: number) => {
+                {current.fields.hints?.map((hint: string, idx: number) => {
                   return (
                     <Box mt={2} key={idx}>
                       <Accordion>
