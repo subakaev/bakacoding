@@ -1,5 +1,6 @@
 import React from "react";
 import { ThemeProvider, CssBaseline, createMuiTheme } from "@material-ui/core";
+import { Provider } from "next-auth/client";
 import "../styles/globals.css";
 
 const theme = createMuiTheme();
@@ -15,10 +16,12 @@ const MyApp = ({ Component, pageProps }) => {
 
   const getLayout = Component.getLayout || ((page) => page);
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      {getLayout(<Component {...pageProps}></Component>)}
-    </ThemeProvider>
+    <Provider session={pageProps.session}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        {getLayout(<Component {...pageProps}></Component>)}
+      </ThemeProvider>
+    </Provider>
   );
 };
 

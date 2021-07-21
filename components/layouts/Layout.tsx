@@ -10,6 +10,7 @@ import {
 } from "@material-ui/core";
 import { FunctionComponent } from "react";
 import Link from "next/link";
+import { signIn, signOut, useSession } from "next-auth/client";
 
 const useStyles = makeStyles({
   brand: {
@@ -19,6 +20,8 @@ const useStyles = makeStyles({
 
 const Layout: FunctionComponent = ({ children }) => {
   const classes = useStyles();
+
+  const [session, loading] = useSession();
 
   return (
     <div>
@@ -42,6 +45,17 @@ const Layout: FunctionComponent = ({ children }) => {
             <Link href="/js" passHref>
               <Button color="inherit">JS</Button>
             </Link>
+          </Box>
+          <Box>
+            {!session && (
+              <>
+                Not signed
+                <Button color="inherit" onClick={() => signIn()}>
+                  Sign In
+                </Button>
+              </>
+            )}
+            {session && <>Signed as {session.user?.email}</>}
           </Box>
         </Toolbar>
       </AppBar>
