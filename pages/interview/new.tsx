@@ -21,7 +21,7 @@ import WarningIcon from "@material-ui/icons/Warning";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { v4 as uuid } from "uuid";
 import store from "store2";
-import { InterviewQuestion, InterviewQuestionSet } from ".";
+import { InterviewQuestion, InterviewQuestionSet } from "../../types/interview";
 
 const useStyles = makeStyles({
   solved: {
