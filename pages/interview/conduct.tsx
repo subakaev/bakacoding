@@ -6,7 +6,7 @@ import { InterviewQuestionSet } from "../../types/interview";
 import InterviewForm from "components/interview/InterviewForm";
 import InterviewResult from "components/interview/InterviewResult";
 
-const NewInterview = () => {
+const ConductInterviewPage = () => {
   const [questionSets] = useState<InterviewQuestionSet[]>(
     store.namespace("inteview").get("questionSets", [])
   );
@@ -26,6 +26,6 @@ const NewInterview = () => {
   );
 };
 
-NewInterview.getLayout = getLayout;
+ConductInterviewPage.getLayout = getLayout;
 
-export default NewInterview;
+export default ConductInterviewPage;

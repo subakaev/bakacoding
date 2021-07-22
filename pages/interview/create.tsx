@@ -3,7 +3,7 @@ import _ from "lodash";
 import { Paper, Box } from "@material-ui/core";
 import InterviewQuestionSetsForm from "components/interview/InterviewQuestionSetsForm";
 
-const InterviewTemplatePage = () => {
+const CreateInterviewPage = () => {
   return (
     <Paper>
       <Box p={5}>
@@ -13,6 +13,6 @@ const InterviewTemplatePage = () => {
   );
 };
 
-InterviewTemplatePage.getLayout = getLayout;
+CreateInterviewPage.getLayout = getLayout;
 
-export default InterviewTemplatePage;
+export default CreateInterviewPage;
