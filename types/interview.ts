@@ -8,3 +8,10 @@ export interface InterviewQuestionSet {
   name: string;
   questions: InterviewQuestion[];
 }
+
+export type Grade = "solved" | "average" | "failed";
+
+export interface Answer {
+  grade: Grade | null;
+  comment: string;
+}
