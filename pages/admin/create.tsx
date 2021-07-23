@@ -1,12 +1,12 @@
 import { getLayout } from "components/layouts/Layout";
 import _ from "lodash";
 import { Paper, Box, Button, TextField } from "@material-ui/core";
-import Link from "next/link";
 import { Autocomplete } from "@material-ui/lab";
 import { useForm, Controller, Control } from "react-hook-form";
 import { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import axios from "axios";
 
 interface MemoryCard {
   question: string;
@@ -62,8 +62,11 @@ const InterviewPage = () => {
 
   console.log(formState.errors);
 
-  const onSubmit = (data: MemoryCard) => {
+  const onSubmit = async (data: MemoryCard) => {
     console.log(data);
+
+    const response = await axios.post("/api/card", data);
+
     setTags(Array.from(new Set([...tags, ...data.tags])));
   };
 
