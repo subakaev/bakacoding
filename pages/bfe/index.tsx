@@ -8,7 +8,6 @@ import _ from "lodash";
 const bfeLinks = ["coding", "answer", "design", "enjoy", "typescript"];
 
 const Bfe = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  console.log(props.data);
   return (
     <div>
       <List component="div">
