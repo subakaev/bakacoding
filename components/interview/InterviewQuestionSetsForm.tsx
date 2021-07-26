@@ -6,7 +6,7 @@ import SaveIcon from "@material-ui/icons/Save";
 import { useForm, useFieldArray, Controller, Control } from "react-hook-form";
 import { v4 as uuid } from "uuid";
 import store from "store2";
-import { InterviewQuestionSet } from "../../types/interview";
+import { InterviewQuestion, InterviewQuestionSet } from "../../types/interview";
 
 interface FormValues {
   questionSets: InterviewQuestionSet[];
@@ -23,7 +23,7 @@ const InterviewQuestionSetForm = ({
 }: InterviewQuestionSetFormProps) => {
   const { fields, append, remove } = useFieldArray({
     control,
-    name: `questionSets.${questionSetIndex}.questions`,
+    name: `questionSets.${questionSetIndex}.questions` as const,
   });
 
   return (
@@ -39,13 +39,16 @@ const InterviewQuestionSetForm = ({
       </Button>
 
       {fields.map((item, index) => {
+        const question = item as InterviewQuestion;
         return (
           <Box key={item.id} display="flex" alignItems="center" px={2} my={1}>
             <Box flexGrow={1}>
               <Controller
-                name={`questionSets.${questionSetIndex}.questions.${index}.question`}
+                name={
+                  `questionSets.${questionSetIndex}.questions.${index}.question` as `questionSets.${number}.questions.${number}.question`
+                }
                 control={control}
-                defaultValue={item.question}
+                defaultValue={(item as any).question as any}
                 render={({ field }) => (
                   <TextField
                     {...field}
@@ -118,9 +121,11 @@ const InterviewQuestionSetsForm = () => {
           <Box mt={2} mb={5}>
             <Box display="flex" alignItems="center">
               <Controller
-                name={`questionSets.${index}.name`}
+                name={
+                  `questionSets.${index}.name` as `questionSets.${number}.name`
+                }
                 control={control}
-                defaultValue={item.name}
+                defaultValue={(item as any).name}
                 render={({ field }) => (
                   <TextField
                     {...field}

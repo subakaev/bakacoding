@@ -1,7 +1,7 @@
 import { Typography, Button, TextField, Box } from "@material-ui/core";
 import DoneIcon from "@material-ui/icons/Done";
 import { useForm, Controller } from "react-hook-form";
-import { Answer, InterviewQuestionSet } from "../../types/interview";
+import { Answer, Grade, InterviewQuestionSet } from "../../types/interview";
 import GradeToggle from "components/interview/GradeToggle";
 import { generateInterviewResult } from "lib/interview";
 
@@ -46,7 +46,9 @@ const InterviewForm = ({ questionSets, onFinished }: InterviewFormProps) => {
 
               <Box display="flex" alignItems="center" mt={1}>
                 <Controller
-                  name={`answers.${question.id}.grade`}
+                  name={
+                    `answers.${question.id}.grade` as "answers.${string}.grade"
+                  }
                   defaultValue={undefined}
                   control={control}
                   render={({ field: { name } }) => (
@@ -58,7 +60,9 @@ const InterviewForm = ({ questionSets, onFinished }: InterviewFormProps) => {
                 />
                 <Box ml={2} flexGrow={1}>
                   <Controller
-                    name={`answers.${question.id}.comment`}
+                    name={
+                      `answers.${question.id}.comment` as "answers.${string}.comment"
+                    }
                     control={control}
                     defaultValue=""
                     render={({ field }) => (
