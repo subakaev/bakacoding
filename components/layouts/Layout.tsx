@@ -51,7 +51,6 @@ const Layout: FunctionComponent = ({ children }) => {
               </Link>
             )}
           </Box>
-          {session?.user?.roles?.includes("Admin") && <div>Admin</div>}
           <Box>
             {!session && (
               <>
