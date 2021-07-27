@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import NextAuth, { NextAuthOptions } from "next-auth";
+import NextAuth, { NextAuthOptions, User } from "next-auth";
 import Adapters from "next-auth/adapters";
 import Providers from "next-auth/providers";
 import Models from "models";
@@ -30,8 +30,8 @@ const options: NextAuthOptions = {
     }
   ),
   callbacks: {
-    async session(session, user) {
-      session.roles = user.roles ?? [];
+    async session(session, user: User) {
+      session.user.roles = user.roles ?? [];
       return session;
     },
   },

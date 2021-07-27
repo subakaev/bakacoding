@@ -45,7 +45,13 @@ const Layout: FunctionComponent = ({ children }) => {
             <Link href="/js" passHref>
               <Button color="inherit">JS</Button>
             </Link>
+            {session?.user.roles.includes("Admin") && (
+              <Link href="/admin" passHref>
+                <Button color="inherit">Admin</Button>
+              </Link>
+            )}
           </Box>
+          {session?.user?.roles?.includes("Admin") && <div>Admin</div>}
           <Box>
             {!session && (
               <>
