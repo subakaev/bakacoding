@@ -11,6 +11,7 @@ import {
 import { FunctionComponent } from "react";
 import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/client";
+import { UserRole } from "types/UserRole";
 
 const useStyles = makeStyles({
   brand: {
@@ -21,7 +22,7 @@ const useStyles = makeStyles({
 const Layout: FunctionComponent = ({ children }) => {
   const classes = useStyles();
 
-  const [session, loading] = useSession();
+  const [session] = useSession();
 
   return (
     <div>
@@ -45,7 +46,7 @@ const Layout: FunctionComponent = ({ children }) => {
             <Link href="/js" passHref>
               <Button color="inherit">JS</Button>
             </Link>
-            {session?.user.roles.includes("Admin") && (
+            {session?.user.roles.includes(UserRole.Admin) && (
               <Link href="/admin" passHref>
                 <Button color="inherit">Admin</Button>
               </Link>
@@ -60,7 +61,14 @@ const Layout: FunctionComponent = ({ children }) => {
                 </Button>
               </>
             )}
-            {session && <>Signed as {session.user?.email}</>}
+            {session && (
+              <>
+                Signed as {session.user?.email}{" "}
+                <Button color="inherit" onClick={() => signOut()}>
+                  Sign Out
+                </Button>
+              </>
+            )}
           </Box>
         </Toolbar>
       </AppBar>
