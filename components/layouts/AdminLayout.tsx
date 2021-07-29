@@ -8,8 +8,6 @@ import Layout from "./Layout";
 const AdminLayout: FunctionComponent = ({ children }) => {
   const [session, loading] = useSession();
 
-  console.log(session);
-
   if (
     typeof window !== "undefined" &&
     !loading &&

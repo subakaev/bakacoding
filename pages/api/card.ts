@@ -10,8 +10,6 @@ export default async function cardHandler(req: any, res: any) {
 
   const card = req.body;
 
-  console.log(card);
-
   switch (method) {
     // case "GET":
     //   // Get data from your database
@@ -19,7 +17,6 @@ export default async function cardHandler(req: any, res: any) {
     //   break;
     case "POST":
       const result = await db.collection("cards").insert(card);
-      console.log(result);
       res.status(200);
       break;
     // case "PUT":

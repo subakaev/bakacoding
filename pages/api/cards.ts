@@ -19,8 +19,7 @@ export default async function cardsHandler(req: any, res: any) {
       break;
     case "POST":
       const result = await db.collection("cards").insert(card);
-      console.log(result);
-      res.status(200);
+      res.status(200).send("success"); // TODO: change status code and return added element
       break;
     // case "PUT":
     //   // Update or create data in your database
