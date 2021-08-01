@@ -10,10 +10,6 @@ import {
   TableBody,
   TableHead,
   IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
 } from "@material-ui/core";
 import { useSession } from "next-auth/client";
 import axios from "axios";
@@ -22,65 +18,32 @@ import MemoryCardFormDialog from "components/dialogs/MemoryCardFormDialog";
 import { MemoryCard } from "types/MemoryCard";
 import useDialog from "lib/hooks/useDialog";
 import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
 import useSWR from "swr";
+import DeleteMemoryCardDialog from "components/dialogs/DeleteMemoryCardDialog";
 
 const cardsFetcher = (url: string): Promise<MemoryCard[]> =>
   axios.get(url).then((res) => res.data);
 
 const useCards = () => {
-  const { data, error } = useSWR("/api/cards", cardsFetcher);
+  const { data, error, revalidate } = useSWR("/api/cards", cardsFetcher);
 
   return {
     cards: data ?? [],
     loading: !data && !error,
     error,
+    revalidate,
   };
-};
-
-const DeleteCardDialog = ({ id }: { id: string }) => {
-  const { open, openDialog, closeDialog } = useDialog();
-
-  const deleteCard = async () => {
-    try {
-      const response = await axios.delete(`/api/cards/${id}`);
-      closeDialog();
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  return (
-    <>
-      <IconButton onClick={openDialog} color="secondary">
-        <DeleteIcon />
-      </IconButton>
-      <Dialog open={open} onClose={closeDialog}>
-        <DialogTitle>Delete Card</DialogTitle>
-        <DialogContent>Are you sure?</DialogContent>
-        <DialogActions>
-          <Button onClick={closeDialog}>Cancel</Button>
-          <Button
-            onClick={deleteCard}
-            color="secondary"
-            startIcon={<DeleteIcon />}
-          >
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </>
-  );
 };
 
 const AdminPage = () => {
   const [session] = useSession();
   const { open, closeDialog, openDialog } = useDialog();
 
-  const { cards } = useCards();
+  const { cards, revalidate } = useCards();
 
   const onSubmit = async (data: MemoryCard) => {
     try {
+      // TODO: use swr mutate here
       const response = await axios.post("/api/cards", {
         ...data,
         userId: session?.user.id,
@@ -127,7 +90,10 @@ const AdminPage = () => {
                     <IconButton color="primary">
                       <EditIcon />
                     </IconButton>
-                    <DeleteCardDialog id={card._id} />
+                    <DeleteMemoryCardDialog
+                      id={card._id}
+                      onDeleted={revalidate}
+                    />
                   </TableCell>
                 </TableRow>
               ))}
