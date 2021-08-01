@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import _ from "lodash";
 import {
   Paper,
@@ -15,9 +15,7 @@ import {
   DialogContent,
   DialogActions,
 } from "@material-ui/core";
-import Link from "next/link";
 import { useSession } from "next-auth/client";
-import { Session } from "next-auth";
 import axios from "axios";
 import { getAdminLayout } from "components/layouts/AdminLayout";
 import MemoryCardFormDialog from "components/dialogs/MemoryCardFormDialog";
@@ -25,6 +23,20 @@ import { MemoryCard } from "types/MemoryCard";
 import useDialog from "lib/hooks/useDialog";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
+import useSWR from "swr";
+
+const cardsFetcher = (url: string): Promise<MemoryCard[]> =>
+  axios.get(url).then((res) => res.data);
+
+const useCards = () => {
+  const { data, error } = useSWR("/api/cards", cardsFetcher);
+
+  return {
+    cards: data ?? [],
+    loading: !data && !error,
+    error,
+  };
+};
 
 const DeleteCardDialog = ({ id }: { id: string }) => {
   const { open, openDialog, closeDialog } = useDialog();
@@ -62,10 +74,10 @@ const DeleteCardDialog = ({ id }: { id: string }) => {
 };
 
 const AdminPage = () => {
-  const [session, loading] = useSession();
-  const [cards, setCards] = useState<MemoryCard[]>([]);
-  const [cardsLoading, setCardsLoading] = useState(false);
+  const [session] = useSession();
   const { open, closeDialog, openDialog } = useDialog();
+
+  const { cards } = useCards();
 
   const onSubmit = async (data: MemoryCard) => {
     try {
@@ -83,27 +95,6 @@ const AdminPage = () => {
   };
 
   const [tags, setTags] = useState(["one", "two", "three"]);
-
-  useEffect(() => {
-    if (loading) {
-      return;
-    }
-
-    const getCards = async () => {
-      setCardsLoading(true);
-      try {
-        // await delay();
-        const response = await axios.get("/api/cards");
-
-        setCards(response.data);
-        setCardsLoading(false);
-      } catch {
-        setCardsLoading(false);
-      }
-    };
-
-    getCards();
-  }, [loading]);
 
   return (
     <Paper>
