@@ -26,6 +26,7 @@ interface MemoryCardFormDialogProps {
   open: boolean;
   closeDialog: () => void;
   onSubmit: (data: MemoryCard) => Promise<void>; // TODO: add type
+  initialValues?: Partial<MemoryCard>;
   tags: string[];
   title: string;
 }
@@ -34,6 +35,7 @@ const MemoryCardFormDialog = ({
   open,
   closeDialog,
   onSubmit,
+  initialValues = {},
   tags,
   title,
 }: MemoryCardFormDialogProps) => {
@@ -43,7 +45,8 @@ const MemoryCardFormDialog = ({
     formState: { isSubmitting },
   } = useForm<MemoryCard>({
     defaultValues: {
-      tags: [],
+      ...initialValues,
+      tags: initialValues.tags ?? [],
     },
     resolver: yupResolver(schema),
   });

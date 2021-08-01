@@ -20,6 +20,7 @@ import useDialog from "lib/hooks/useDialog";
 import EditIcon from "@material-ui/icons/Edit";
 import useSWR from "swr";
 import DeleteMemoryCardDialog from "components/dialogs/DeleteMemoryCardDialog";
+import EditMemoryCardDialog from "components/dialogs/EditMemoryCardDialog";
 
 const cardsFetcher = (url: string): Promise<MemoryCard[]> =>
   axios.get(url).then((res) => res.data);
@@ -87,9 +88,11 @@ const AdminPage = () => {
                   <TableCell>{card._id}</TableCell>
                   <TableCell>{card.question}</TableCell>
                   <TableCell>
-                    <IconButton color="primary">
-                      <EditIcon />
-                    </IconButton>
+                    <EditMemoryCardDialog
+                      card={card}
+                      tags={tags}
+                      onChanged={revalidate}
+                    />
                     <DeleteMemoryCardDialog
                       id={card._id}
                       onDeleted={revalidate}
