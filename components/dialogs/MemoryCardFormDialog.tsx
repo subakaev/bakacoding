@@ -54,7 +54,7 @@ const MemoryCardFormDialog = ({
   };
 
   return (
-    <Dialog open={open} onClose={closeDialog}>
+    <Dialog open={open} onClose={closeDialog} maxWidth="xl" fullWidth>
       <DialogTitle>{title}</DialogTitle>
       <form onSubmit={handleSubmit(submitHandler)}>
         <DialogContent>
