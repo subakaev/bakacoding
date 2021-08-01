@@ -13,6 +13,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import AutocompleteInput from "components/form/AutoCompleteInput";
 import { Cancel, Save } from "@material-ui/icons";
+import { MemoryCard } from "types/MemoryCard";
 
 const schema = yup.object().shape({
   question: yup.string().required(),
@@ -24,7 +25,7 @@ const schema = yup.object().shape({
 interface MemoryCardFormDialogProps {
   open: boolean;
   closeDialog: () => void;
-  onSubmit: (data: any) => Promise<void>; // TODO: add type
+  onSubmit: (data: MemoryCard) => Promise<void>; // TODO: add type
   tags: string[];
   title: string;
 }
@@ -40,14 +41,14 @@ const MemoryCardFormDialog = ({
     handleSubmit,
     control,
     formState: { isSubmitting },
-  } = useForm({
+  } = useForm<MemoryCard>({
     defaultValues: {
       tags: [],
     },
     resolver: yupResolver(schema),
   });
 
-  const submitHandler = async (data: any) => {
+  const submitHandler = async (data: MemoryCard) => {
     await onSubmit(data);
     closeDialog();
   };

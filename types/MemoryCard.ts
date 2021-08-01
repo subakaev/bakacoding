@@ -1,5 +1,5 @@
 export interface MemoryCard {
-  id: string;
+  _id: string;
   userId: string;
   question: string;
   answer: string;
