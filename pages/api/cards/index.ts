@@ -1,7 +1,11 @@
 import { Db } from "mongodb";
 import { connectToDatabase } from "../../../lib/mongodb";
+import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function cardsHandler(req: any, res: any) {
+export default async function cardsHandler(
+  req: NextApiRequest,
+  res: NextApiResponse
+): Promise<void> {
   try {
     const { method } = req;
 

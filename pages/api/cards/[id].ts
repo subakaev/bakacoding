@@ -1,8 +1,13 @@
 import { Db, ObjectID } from "mongodb";
 import { connectToDatabase } from "../../../lib/mongodb";
 import omit from "lodash/omit";
+import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function cardsHandler(req: any, res: any) {
+// TODO: think about making NextApiRequest generic to specify type for the body or query. It can be difficult because this handler is using for all family routes
+export default async function cardsHandler(
+  req: NextApiRequest,
+  res: NextApiResponse
+): Promise<void> {
   try {
     const { method } = req;
 
@@ -11,8 +16,6 @@ export default async function cardsHandler(req: any, res: any) {
     const conn = await connectToDatabase();
 
     const db = conn.db as Db;
-
-    const card = req.body;
 
     switch (method) {
       case "GET":
@@ -29,19 +32,19 @@ export default async function cardsHandler(req: any, res: any) {
       case "DELETE":
         const result1 = await db
           .collection("cards")
-          .deleteOne({ _id: new ObjectID(req.query.id) });
+          .deleteOne({ _id: new ObjectID(req.query.id as string) });
         console.log(result1);
         res.status(204).end();
         break;
       case "PUT":
-        const r = await db
+        await db
           .collection("cards")
           .updateOne(
-            { _id: new ObjectID(req.query.id) },
+            { _id: new ObjectID(req.query.id as string) },
             { $set: omit(req.body, "_id") }
           ); // get user id from session TODO: add createdby updatedby???
         // Update or create data in your database
-        res.status(200).end(); // TODO: put correct code here
+        res.status(200).end(); // TODO: put correct code here and send response?
         break;
       default:
         res.setHeader("Allow", ["GET", "PUT"]); // TODO: change

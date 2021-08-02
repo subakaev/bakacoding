@@ -18,14 +18,13 @@ const CodeTaskSolution = ({
   id,
   text,
   title = "Solution",
-}: CodeTaskSolutionProps) => {
+}: CodeTaskSolutionProps): JSX.Element => {
   return (
     <Accordion>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls={`${id}-content`}
-        id={`${id}-header`}
-      >
+        id={`${id}-header`}>
         <Typography variant="subtitle1">{title}</Typography>
       </AccordionSummary>
       <AccordionDetails>

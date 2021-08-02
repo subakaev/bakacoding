@@ -79,6 +79,8 @@ const Layout: FunctionComponent = ({ children }) => {
   );
 };
 
-export const getLayout = (page: any) => <Layout>{page}</Layout>;
+export const getLayout = (page: JSX.Element): JSX.Element => (
+  <Layout>{page}</Layout>
+);
 
 export default Layout;

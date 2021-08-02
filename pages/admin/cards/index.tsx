@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import _ from "lodash";
 import {
   Paper,
   Box,
@@ -9,7 +8,6 @@ import {
   TableRow,
   TableBody,
   TableHead,
-  IconButton,
 } from "@material-ui/core";
 import { useSession } from "next-auth/client";
 import axios from "axios";
@@ -17,7 +15,6 @@ import { getAdminLayout } from "components/layouts/AdminLayout";
 import MemoryCardFormDialog from "components/dialogs/MemoryCardFormDialog";
 import { MemoryCard } from "types/MemoryCard";
 import useDialog from "lib/hooks/useDialog";
-import EditIcon from "@material-ui/icons/Edit";
 import useSWR from "swr";
 import DeleteMemoryCardDialog from "components/dialogs/DeleteMemoryCardDialog";
 import EditMemoryCardDialog from "components/dialogs/EditMemoryCardDialog";
@@ -36,7 +33,7 @@ const useCards = () => {
   };
 };
 
-const AdminPage = () => {
+const AdminPage = (): JSX.Element => {
   const [session] = useSession();
   const { open, closeDialog, openDialog } = useDialog();
 

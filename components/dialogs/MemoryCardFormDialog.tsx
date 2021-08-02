@@ -38,7 +38,7 @@ const MemoryCardFormDialog = ({
   initialValues = {},
   tags,
   title,
-}: MemoryCardFormDialogProps) => {
+}: MemoryCardFormDialogProps): JSX.Element => {
   const {
     handleSubmit,
     control,
@@ -92,16 +92,14 @@ const MemoryCardFormDialog = ({
           <Button
             onClick={closeDialog}
             disabled={isSubmitting}
-            startIcon={<Cancel />}
-          >
+            startIcon={<Cancel />}>
             Cancel
           </Button>
           <Button
             type="submit"
             color="primary"
             disabled={isSubmitting}
-            startIcon={<Save />}
-          >
+            startIcon={<Save />}>
             {isSubmitting ? <CircularProgress size={15} /> : "Save"}
           </Button>
         </DialogActions>

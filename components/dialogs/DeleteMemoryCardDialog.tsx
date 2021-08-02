@@ -1,5 +1,4 @@
 import React from "react";
-import _ from "lodash";
 import {
   Button,
   IconButton,
@@ -18,12 +17,12 @@ const DeleteMemoryCardDialog = ({
 }: {
   id: string;
   onDeleted: () => Promise<boolean>;
-}) => {
+}): JSX.Element => {
   const { open, openDialog, closeDialog } = useDialog();
 
   const deleteCard = async () => {
     try {
-      const response = await axios.delete(`/api/cards/${id}`);
+      await axios.delete(`/api/cards/${id}`);
       await onDeleted();
       closeDialog();
     } catch (e) {
@@ -44,8 +43,7 @@ const DeleteMemoryCardDialog = ({
           <Button
             onClick={deleteCard}
             color="secondary"
-            startIcon={<DeleteIcon />}
-          >
+            startIcon={<DeleteIcon />}>
             Delete
           </Button>
         </DialogActions>

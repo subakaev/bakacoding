@@ -8,7 +8,7 @@ import InterviewResult from "components/interview/InterviewResult";
 import Link from "next/link";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 
-const ConductInterviewPage = () => {
+const ConductInterviewPage = (): JSX.Element => {
   const [questionSets] = useState<InterviewQuestionSet[]>(
     store.namespace("inteview").get("questionSets", [])
   );

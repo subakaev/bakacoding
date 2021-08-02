@@ -1,13 +1,5 @@
 import React from "react";
-import _ from "lodash";
-import {
-  Button,
-  IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-} from "@material-ui/core";
+import { IconButton } from "@material-ui/core";
 import axios from "axios";
 import useDialog from "lib/hooks/useDialog";
 import EditIcon from "@material-ui/icons/Edit";
@@ -22,12 +14,12 @@ const EditMemoryCardDialog = ({
   card: MemoryCard;
   tags: string[];
   onChanged: () => Promise<boolean>;
-}) => {
+}): JSX.Element => {
   const { open, openDialog, closeDialog } = useDialog();
 
   const updateCard = async (data: MemoryCard) => {
     // TODO: use mutate here?
-    const response = await axios.put(`/api/cards/${card._id}`, data);
+    await axios.put(`/api/cards/${card._id}`, data);
 
     await onChanged();
     closeDialog();

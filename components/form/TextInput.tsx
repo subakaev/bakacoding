@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// TODO: fix any types
 import { Control, Controller } from "react-hook-form";
 import { TextField } from "@material-ui/core";
 
@@ -13,7 +15,7 @@ const TextInput = ({
   control,
   defaultValue = "",
   ...other
-}: TextInputProps) => {
+}: TextInputProps): JSX.Element => {
   return (
     <Controller
       name={name}

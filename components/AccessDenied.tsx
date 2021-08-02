@@ -1,4 +1,4 @@
-const AccessDenied = () => {
+const AccessDenied = (): JSX.Element => {
   return <div>Access denied</div>;
 };
 

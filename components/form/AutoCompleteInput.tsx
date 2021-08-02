@@ -5,6 +5,8 @@ import { capitalize } from "lodash";
 
 interface AutocompleteInputProps {
   name: string;
+  // TODO:
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   control: Control<any>;
   options: string[];
   label?: string;
@@ -15,7 +17,7 @@ const AutocompleteInput = ({
   control,
   options,
   label,
-}: AutocompleteInputProps) => {
+}: AutocompleteInputProps): JSX.Element => {
   return (
     <Controller
       name={name}

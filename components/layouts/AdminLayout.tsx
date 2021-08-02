@@ -19,6 +19,8 @@ const AdminLayout: FunctionComponent = ({ children }) => {
   return <Layout>{loading ? <Loading /> : children}</Layout>;
 };
 
-export const getAdminLayout = (page: any) => <AdminLayout>{page}</AdminLayout>;
+export const getAdminLayout = (page: JSX.Element): JSX.Element => (
+  <AdminLayout>{page}</AdminLayout>
+);
 
 export default Layout;
