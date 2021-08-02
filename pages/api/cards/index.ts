@@ -1,7 +1,9 @@
 import { connectToDatabase } from "../../../lib/mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import withAuth from "lib/middlewares/auth-middleware";
+import withAdmin from "lib/middlewares/admin-middleware";
 
-export default async function cardsHandler(
+async function cardsHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<void> {
@@ -34,3 +36,5 @@ export default async function cardsHandler(
     res.status(500).end("Internal Server error");
   }
 }
+
+export default withAuth(withAdmin(cardsHandler));

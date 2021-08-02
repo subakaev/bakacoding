@@ -2,9 +2,11 @@ import { Db, ObjectID } from "mongodb";
 import { connectToDatabase } from "../../../lib/mongodb";
 import omit from "lodash/omit";
 import { NextApiRequest, NextApiResponse } from "next";
+import withAuth from "lib/middlewares/auth-middleware";
+import withAdmin from "lib/middlewares/admin-middleware";
 
 // TODO: think about making NextApiRequest generic to specify type for the body or query. It can be difficult because this handler is using for all family routes
-export default async function cardsHandler(
+async function cardsHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<void> {
@@ -40,3 +42,5 @@ export default async function cardsHandler(
     res.status(500).end("Internal Server error");
   }
 }
+
+export default withAuth(withAdmin(cardsHandler));
