@@ -14,6 +14,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import AutocompleteInput from "components/form/AutoCompleteInput";
 import { Cancel, Save } from "@material-ui/icons";
 import { MemoryCard } from "types/MemoryCard";
+import MarkdownInput from "components/form/MarkdownInput";
 
 const schema = yup.object().shape({
   question: yup.string().required(),
@@ -43,6 +44,7 @@ const MemoryCardFormDialog = ({
     handleSubmit,
     control,
     formState: { isSubmitting },
+    getValues,
   } = useForm<MemoryCard>({
     defaultValues: {
       ...initialValues,
@@ -61,7 +63,7 @@ const MemoryCardFormDialog = ({
       <DialogTitle>{title}</DialogTitle>
       <form onSubmit={handleSubmit(submitHandler)}>
         <DialogContent>
-          <TextInput
+          <MarkdownInput
             name="question"
             control={control}
             label="Question"
@@ -69,8 +71,10 @@ const MemoryCardFormDialog = ({
             multiline
             fullWidth
             disabled={isSubmitting}
+            getValues={getValues}
           />
-          <TextInput
+
+          <MarkdownInput
             name="answer"
             control={control}
             label="Answer"
@@ -78,7 +82,9 @@ const MemoryCardFormDialog = ({
             multiline
             fullWidth
             disabled={isSubmitting}
+            getValues={getValues}
           />
+
           <TextInput
             name="link"
             control={control}
