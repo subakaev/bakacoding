@@ -50,6 +50,6 @@
   },
   "simple-git-hooks": {
     "pre-commit": "npx lint-staged",
-    "pre-push": "npm run check-types"
+    "pre-push": "npm run type-check"
   }
 }
