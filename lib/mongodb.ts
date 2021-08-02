@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { MongoClient } from "mongodb";
+import { Db, MongoClient } from "mongodb";
 
 const MONGODB_URI = process.env.DATABASE_URL ?? "";
 // const MONGODB_DB = process.env.MONGODB_DB;
@@ -10,11 +10,15 @@ if (!MONGODB_URI) {
   );
 }
 
-// if (!MONGODB_DB) {
-//   throw new Error(
-//     "Please define the MONGODB_DB environment variable inside .env.local"
-//   );
-// }
+interface MongoConnection {
+  client: MongoClient;
+  db: Db;
+}
+
+interface CachedConnection {
+  connection: MongoConnection;
+  promise: Promise<MongoConnection>;
+}
 
 /**
  * Global is used here to maintain a cached connection across hot reloads
@@ -22,7 +26,7 @@ if (!MONGODB_URI) {
  * during API Route usage.
  */
 // @ts-ignore
-let cached = global.mongo;
+let cached: CachedConnection = global.mongo;
 
 if (!cached) {
   // @ts-ignore
@@ -32,8 +36,8 @@ if (!cached) {
 // TODO: fix ts-ignore & return type
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function connectToDatabase() {
-  if (cached.conn) {
-    return cached.conn;
+  if (cached.connection) {
+    return cached.connection;
   }
 
   if (!cached.promise) {
@@ -49,6 +53,8 @@ export async function connectToDatabase() {
       };
     });
   }
-  cached.conn = await cached.promise;
-  return cached.conn;
+
+  cached.connection = await cached.promise;
+
+  return cached.connection;
 }

@@ -11,29 +11,15 @@ export default async function cardsHandler(
   try {
     const { method } = req;
 
-    console.log(req.method);
-
     const conn = await connectToDatabase();
 
     const db = conn.db as Db;
 
     switch (method) {
-      case "GET":
-        const cards = await db.collection("cards").find().toArray();
-        res.status(200).json(cards);
-        break;
-      // case "POST":
-      //   const result = await db.collection("cards").insertOne(card);
-      //   const inserted = await db
-      //     .collection("cards")
-      //     .findOne({ _id: result.insertedId });
-      //   res.status(201).json(inserted);
-      //   break;
       case "DELETE":
-        const result1 = await db
+        await db
           .collection("cards")
           .deleteOne({ _id: new ObjectID(req.query.id as string) });
-        console.log(result1);
         res.status(204).end();
         break;
       case "PUT":
@@ -43,11 +29,10 @@ export default async function cardsHandler(
             { _id: new ObjectID(req.query.id as string) },
             { $set: omit(req.body, "_id") }
           ); // get user id from session TODO: add createdby updatedby???
-        // Update or create data in your database
         res.status(200).end(); // TODO: put correct code here and send response?
         break;
       default:
-        res.setHeader("Allow", ["GET", "PUT"]); // TODO: change
+        res.setHeader("Allow", ["PUT", "DELETE"]); // TODO: change
         res.status(405).end(`Method ${method} Not Allowed`);
     }
   } catch (e) {
