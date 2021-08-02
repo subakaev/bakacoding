@@ -1,7 +1,5 @@
 import { getLayout } from "components/layouts/Layout";
-import _ from "lodash";
 import {
-  Paper,
   Card,
   CardContent,
   CardActions,
@@ -14,10 +12,8 @@ import {
   AccordionDetails,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { ToggleButton } from "@material-ui/lab";
 import { useState } from "react";
 import { getEntriesByTags } from "lib/contentful";
-import Link from "next/link";
 import { Typography } from "@material-ui/core";
 import { CardHeader } from "@material-ui/core";
 import MarkdownText from "components/markdown/MarkdownText";
@@ -27,9 +23,7 @@ interface Tag extends ContentfulTag {
   active: boolean;
 }
 
-const TagsPanel = () => {};
-
-const Cs = () => {
+const Cs = (): JSX.Element => {
   const [tags, setTags] = useState<{ [id: string]: Tag }>(
     initialTags.reduce(
       (acc, tag) => ({ ...acc, [tag.id]: { ...tag, active: false } }),
@@ -38,6 +32,8 @@ const Cs = () => {
   );
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
+  // TODO: fix any type
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [current, setCurrent] = useState<any>(null);
 
   const createOnTagToggleHandler = (id: string) => () => {
@@ -97,7 +93,7 @@ const Cs = () => {
         <CardContent>
           {Object.values(tags).map((tag) => {
             return (
-              <Box mr={1} component="span">
+              <Box mr={1} component="span" key={tag.id}>
                 <Chip
                   size="small"
                   label={tag.name}
@@ -137,8 +133,7 @@ const Cs = () => {
                         <AccordionSummary
                           expandIcon={<ExpandMoreIcon />}
                           aria-controls={`panel${idx}-content`}
-                          id={`panel${idx}-header`}
-                        >
+                          id={`panel${idx}-header`}>
                           <Typography>Show hint {idx + 1}</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
@@ -154,8 +149,7 @@ const Cs = () => {
                     <AccordionSummary
                       expandIcon={<ExpandMoreIcon />}
                       aria-controls="javascript-content"
-                      id="javascript-header"
-                    >
+                      id="javascript-header">
                       <Typography>Show solution</Typography>
                     </AccordionSummary>
                     <AccordionDetails style={{ display: "block" }}>

@@ -20,13 +20,15 @@ interface ContentfulQuestionSetTrainerProps {
 
 const ContentfulQuestionSetTrainer = (
   props: ContentfulQuestionSetTrainerProps
-) => {
+): JSX.Element => {
   const [ids] = useState(_.shuffle(props.ids));
 
   const [setIndex, setSetIndex] = useState(-1);
   const [loading, setLoading] = useState(false);
 
   const [title, setTitle] = useState("");
+  // TODO: fix any type
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [questions, setQuestions] = useState<any>([]);
   const [questionIndex, setQuestionIndex] = useState(-1);
 
@@ -39,6 +41,8 @@ const ContentfulQuestionSetTrainer = (
       setLoading(true);
 
       try {
+        // TODO: fix any type
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const data = await getEntryById<any>(ids[setIndex]);
         console.log(data); // TODO remove
         setTitle(data.fields.title);
@@ -64,7 +68,7 @@ const ContentfulQuestionSetTrainer = (
     };
 
     loadData();
-  }, [setIndex]);
+  }, [setIndex, ids]);
 
   const startButtonClickHandler = () => {
     setSetIndex(0);
@@ -95,8 +99,7 @@ const ContentfulQuestionSetTrainer = (
           onClick={startButtonClickHandler}
           variant="contained"
           color="primary"
-          size="large"
-        >
+          size="large">
           Start
         </Button>
       </Box>
@@ -111,8 +114,7 @@ const ContentfulQuestionSetTrainer = (
           onClick={startButtonClickHandler}
           variant="contained"
           color="primary"
-          size="large"
-        >
+          size="large">
           Start again
         </Button>
       </Box>
@@ -135,8 +137,7 @@ const ContentfulQuestionSetTrainer = (
           onClick={startQuestionSetClickHandler}
           variant="contained"
           color="primary"
-          size="large"
-        >
+          size="large">
           Start
         </Button>
       </Box>
@@ -151,16 +152,14 @@ const ContentfulQuestionSetTrainer = (
           onClick={startQuestionSetClickHandler}
           variant="contained"
           color="primary"
-          size="large"
-        >
+          size="large">
           Start again
         </Button>
         <Button
           onClick={startNextQuestionSetClickHanlder}
           variant="contained"
           color="primary"
-          size="large"
-        >
+          size="large">
           Next set
         </Button>
       </Box>

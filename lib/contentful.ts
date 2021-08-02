@@ -32,7 +32,7 @@ export function getEntriesByTags<T>(
   contentType: string,
   tags: string[],
   mode: TagMode = "all",
-  params?: any
+  params?: Record<string, unknown> // TODO:
 ): Promise<EntryCollection<T>> {
   return getContentfulClient().getEntries<T>({
     content_type: contentType,

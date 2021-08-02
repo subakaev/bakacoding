@@ -5,11 +5,9 @@ import { FunctionComponent } from "react";
 interface CodeBlockProps {
   inline?: boolean;
   className?: string;
-  node: any; // TODO
 }
 
 const CodeBlock: FunctionComponent<CodeBlockProps> = ({
-  node,
   children,
   inline = false,
   className = "",
@@ -21,11 +19,13 @@ const CodeBlock: FunctionComponent<CodeBlockProps> = ({
       style={materialLight}
       language={langMatch[1]}
       PreTag="div"
-      children={String(children).replace(/\n$/, "")}
-      {...props}
-    />
+      {...props}>
+      {String(children).replace(/\n$/, "")}
+    </SyntaxHighlighter>
   ) : (
-    <code className={className} children={children} {...props} />
+    <code className={className} {...props}>
+      {children}
+    </code>
   );
 };
 

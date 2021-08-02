@@ -1,7 +1,7 @@
 import { Typography, Button, TextField, Box } from "@material-ui/core";
 import DoneIcon from "@material-ui/icons/Done";
 import { useForm, Controller } from "react-hook-form";
-import { Answer, Grade, InterviewQuestionSet } from "../../types/interview";
+import { Answer, InterviewQuestionSet } from "../../types/interview";
 import GradeToggle from "components/interview/GradeToggle";
 import { generateInterviewResult } from "lib/interview";
 
@@ -26,7 +26,10 @@ interface InterviewFormProps {
   onFinished: (result: string) => void;
 }
 
-const InterviewForm = ({ questionSets, onFinished }: InterviewFormProps) => {
+const InterviewForm = ({
+  questionSets,
+  onFinished,
+}: InterviewFormProps): JSX.Element => {
   const { control, handleSubmit, setValue, getValues } = useForm<FormValues>({
     defaultValues: getDefaultFormValues(questionSets),
   });
@@ -85,8 +88,7 @@ const InterviewForm = ({ questionSets, onFinished }: InterviewFormProps) => {
         type="submit"
         variant="contained"
         color="primary"
-        startIcon={<DoneIcon />}
-      >
+        startIcon={<DoneIcon />}>
         Finish
       </Button>
     </form>

@@ -3,9 +3,6 @@ import _ from "lodash";
 import {
   Button,
   Link as MuiLink,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
   Box,
   Card,
   CardHeader,
@@ -14,7 +11,6 @@ import {
   Typography,
   CircularProgress,
 } from "@material-ui/core";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import MarkdownText from "./markdown/MarkdownText";
 import { getEntryById } from "lib/contentful";
 import CodeTaskSolution from "./CodeTaskSolution";
@@ -23,10 +19,14 @@ interface ContentfulTrainerProps {
   ids: string[];
 }
 
-const ContentfulCodeTaskTrainer = (props: ContentfulTrainerProps) => {
+const ContentfulCodeTaskTrainer = (
+  props: ContentfulTrainerProps
+): JSX.Element => {
   const [ids] = useState(_.shuffle(props.ids));
   const [index, setIndex] = useState(-1);
   const [loading, setLoading] = useState(false);
+  // TODO: create type for contentful entity
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [entry, setEntry] = useState<any>(null); // TODO
 
   useEffect(() => {
@@ -49,7 +49,7 @@ const ContentfulCodeTaskTrainer = (props: ContentfulTrainerProps) => {
     };
 
     loadData();
-  }, [index, setLoading, setEntry]);
+  }, [index, setLoading, setEntry, ids]);
 
   const startButtonClickHandler = () => {
     setIndex(0);
@@ -70,8 +70,7 @@ const ContentfulCodeTaskTrainer = (props: ContentfulTrainerProps) => {
           onClick={startButtonClickHandler}
           variant="contained"
           color="primary"
-          size="large"
-        >
+          size="large">
           Start
         </Button>
       </Box>
@@ -86,8 +85,7 @@ const ContentfulCodeTaskTrainer = (props: ContentfulTrainerProps) => {
           onClick={startButtonClickHandler}
           variant="contained"
           color="primary"
-          size="large"
-        >
+          size="large">
           Start again
         </Button>
       </Box>
@@ -116,7 +114,8 @@ const ContentfulCodeTaskTrainer = (props: ContentfulTrainerProps) => {
             </Button>
           </MuiLink>
         </Box>
-        {entry.fields.javascript?.map((solution: any /* TODO */) => {
+        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+        {entry.fields.javascript?.map((solution: any /* TODO: */) => {
           return (
             <CodeTaskSolution
               key={solution.sys.id}

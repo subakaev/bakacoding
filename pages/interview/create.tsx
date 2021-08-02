@@ -1,11 +1,10 @@
 import { getLayout } from "components/layouts/Layout";
-import _ from "lodash";
 import { Paper, Box, Button } from "@material-ui/core";
 import InterviewQuestionSetsForm from "components/interview/InterviewQuestionSetsForm";
 import Link from "next/link";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 
-const CreateInterviewPage = () => {
+const CreateInterviewPage = (): JSX.Element => {
   return (
     <Paper>
       <Box p={1} mb={2}>

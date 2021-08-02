@@ -38,11 +38,13 @@ interface GradeToggleProps {
   value: Grade | null;
   onChange: (
     event: React.MouseEvent<HTMLElement, MouseEvent>,
+    // TODO: fix any type here
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     value: any
   ) => void;
 }
 
-const GradeToggle = ({ value, onChange }: GradeToggleProps) => {
+const GradeToggle = ({ value, onChange }: GradeToggleProps): JSX.Element => {
   const classes = useStyles();
 
   return (
@@ -51,27 +53,23 @@ const GradeToggle = ({ value, onChange }: GradeToggleProps) => {
       onChange={onChange}
       exclusive
       aria-label="text alignment"
-      size="small"
-    >
+      size="small">
       <ToggleButton
         value="failed"
         aria-label="left aligned"
-        className={classes.failed}
-      >
+        className={classes.failed}>
         <ClearIcon fontSize="small" />
       </ToggleButton>
       <ToggleButton
         value="average"
         aria-label="centered"
-        className={classes.average}
-      >
+        className={classes.average}>
         <WarningIcon fontSize="small" />
       </ToggleButton>
       <ToggleButton
         value="solved"
         aria-label="right aligned"
-        className={classes.solved}
-      >
+        className={classes.solved}>
         <DoneIcon fontSize="small" />
       </ToggleButton>
     </ToggleButtonGroup>

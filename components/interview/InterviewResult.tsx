@@ -5,7 +5,7 @@ interface InterviewResultProps {
   value: string;
 }
 
-const InterviewResult = ({ value }: InterviewResultProps) => {
+const InterviewResult = ({ value }: InterviewResultProps): JSX.Element => {
   const copyToClipboard = () => {
     navigator.clipboard.writeText(value);
   };
@@ -18,8 +18,7 @@ const InterviewResult = ({ value }: InterviewResultProps) => {
           size="small"
           color="primary"
           onClick={copyToClipboard}
-          startIcon={<FileCopyIcon />}
-        >
+          startIcon={<FileCopyIcon />}>
           Copy
         </Button>
       </Box>

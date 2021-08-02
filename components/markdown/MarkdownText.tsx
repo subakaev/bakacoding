@@ -6,7 +6,7 @@ interface MarkdownTextProps {
   text: string;
 }
 
-const MarkdownText = ({ text }: MarkdownTextProps) => {
+const MarkdownText = ({ text }: MarkdownTextProps): JSX.Element => {
   return (
     <ReactMarkdown remarkPlugins={[gfm]} components={{ code: CodeBlock }}>
       {text}

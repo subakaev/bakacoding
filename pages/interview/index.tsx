@@ -1,9 +1,8 @@
 import { getLayout } from "components/layouts/Layout";
-import _ from "lodash";
 import { Paper, Box, Button } from "@material-ui/core";
 import Link from "next/link";
 
-const InterviewPage = () => {
+const InterviewPage = (): JSX.Element => {
   return (
     <Paper>
       <Box p={5}>

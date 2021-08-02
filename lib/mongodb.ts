@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { MongoClient } from "mongodb";
 
 const MONGODB_URI = process.env.DATABASE_URL ?? "";
@@ -28,6 +29,8 @@ if (!cached) {
   cached = global.mongo = { conn: null, promise: null };
 }
 
+// TODO: fix ts-ignore & return type
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function connectToDatabase() {
   if (cached.conn) {
     return cached.conn;

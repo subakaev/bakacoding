@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import NextAuth, { NextAuthOptions, User } from "next-auth";
 import Adapters from "next-auth/adapters";
 import Providers from "next-auth/providers";
-import Models from "models";
+import models from "models";
 
 const options: NextAuthOptions = {
   providers: [
@@ -22,7 +22,9 @@ const options: NextAuthOptions = {
     },
     {
       models: {
-        User: Models.User as any,
+        // TODO: think what to do with any type here. It doesn't work without any for now.
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        User: models.User as any,
         Account: Adapters.TypeORM.Models.Account,
         Session: Adapters.TypeORM.Models.Session,
         VerificationRequest: Adapters.TypeORM.Models.VerificationRequest,
@@ -31,11 +33,16 @@ const options: NextAuthOptions = {
   ),
   callbacks: {
     async session(session, user: User) {
+      session.user.id = user._id;
       session.user.roles = user.roles ?? [];
       return session;
     },
   },
 };
 
-export default (req: NextApiRequest, res: NextApiResponse) =>
-  NextAuth(req, res, options);
+const authRoutes = (
+  req: NextApiRequest,
+  res: NextApiResponse
+): void | Promise<void> => NextAuth(req, res, options);
+
+export default authRoutes;
