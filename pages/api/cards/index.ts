@@ -1,19 +1,18 @@
-import { Db } from "mongodb";
 import { connectToDatabase } from "../../../lib/mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import withAuth from "lib/middlewares/auth-middleware";
+import withAdmin from "lib/middlewares/admin-middleware";
 
-export default async function cardsHandler(
+async function cardsHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<void> {
   try {
     const { method } = req;
 
-    console.log(req.method);
-
     const conn = await connectToDatabase();
 
-    const db = conn.db as Db;
+    const db = conn.db;
 
     const card = req.body;
 
@@ -29,15 +28,13 @@ export default async function cardsHandler(
           .findOne({ _id: result.insertedId });
         res.status(201).json(inserted);
         break;
-      // case "PUT":
-      //   // Update or create data in your database
-      //   res.status(200).json({ id, name: name || `User ${id}` });
-      //   break;
       default:
-        res.setHeader("Allow", ["GET", "PUT"]); // TODO: change
+        res.setHeader("Allow", ["GET", "POST"]);
         res.status(405).end(`Method ${method} Not Allowed`);
     }
   } catch (e) {
     res.status(500).end("Internal Server error");
   }
 }
+
+export default withAuth(withAdmin(cardsHandler));
