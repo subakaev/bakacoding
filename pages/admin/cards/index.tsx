@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Paper,
   Box,
@@ -33,29 +33,44 @@ const useCards = () => {
   };
 };
 
+const tagsFetcher = (url: string): Promise<string[]> =>
+  axios.get(url).then((res) => res.data);
+
+const useTags = () => {
+  const { data, error, mutate } = useSWR("/api/tags", tagsFetcher);
+
+  return {
+    tags: data ?? [],
+    loading: !data && !error,
+    error,
+    mutate,
+  };
+};
+
 const AdminPage = (): JSX.Element => {
   const [session] = useSession();
   const { open, closeDialog, openDialog } = useDialog();
 
   const { cards, revalidate } = useCards();
+  const { tags, mutate } = useTags();
 
   const onSubmit = async (data: MemoryCard) => {
     try {
       // TODO: use swr mutate here
-      const response = await axios.post("/api/cards", {
+      await axios.post("/api/cards", {
         ...data,
         userId: session?.user.id,
       });
 
-      console.log(response.data);
+      await axios.put("/api/tags", {
+        tags: Array.from(new Set([...tags, ...data.tags])),
+      });
 
-      setTags(Array.from(new Set([...tags, ...data.tags])));
+      await mutate();
     } catch (e) {
       console.error(e); // TODO: remove console.log
     }
   };
-
-  const [tags, setTags] = useState(["one", "two", "three"]);
 
   return (
     <Paper>

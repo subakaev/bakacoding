@@ -18,7 +18,11 @@ async function cardsHandler(
 
     switch (method) {
       case "GET":
-        const cards = await db.collection("cards").find().toArray();
+        const cards = await db
+          .collection("cards")
+          .find()
+          .sort({ _id: -1 })
+          .toArray();
         res.status(200).json(cards);
         break;
       case "POST":
