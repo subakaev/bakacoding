@@ -18,9 +18,10 @@ async function cardsHandler(
 
     switch (method) {
       case "GET":
+        const tags = [req.query.tags ?? []].flat();
         const cards = await db
           .collection("cards")
-          .find()
+          .find(tags.length > 0 ? { tags: { $elemMatch: { $in: tags } } } : {})
           .sort({ _id: -1 })
           .toArray();
         res.status(200).json(cards);
@@ -37,6 +38,7 @@ async function cardsHandler(
         res.status(405).end(`Method ${method} Not Allowed`);
     }
   } catch (e) {
+    console.log(e);
     res.status(500).end("Internal Server error");
   }
 }

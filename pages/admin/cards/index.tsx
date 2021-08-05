@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Paper,
   Box,
@@ -18,12 +18,18 @@ import useDialog from "lib/hooks/useDialog";
 import useSWR from "swr";
 import DeleteMemoryCardDialog from "components/dialogs/DeleteMemoryCardDialog";
 import EditMemoryCardDialog from "components/dialogs/EditMemoryCardDialog";
+import TagsFilter from "components/TagsFilter";
 
-const cardsFetcher = (url: string): Promise<MemoryCard[]> =>
-  axios.get(url).then((res) => res.data);
+const cardsFetcher = (url: string, tags: string[]): Promise<MemoryCard[]> =>
+  axios
+    .get(`${url}?${tags.map((tag) => `tags=${tag}`).join("&")}`)
+    .then((res) => res.data);
 
-const useCards = () => {
-  const { data, error, revalidate } = useSWR("/api/cards", cardsFetcher);
+const useCards = (tags: string[]) => {
+  const { data, error, revalidate } = useSWR(
+    ["/api/cards", tags],
+    cardsFetcher
+  );
 
   return {
     cards: data ?? [],
@@ -51,8 +57,11 @@ const AdminPage = (): JSX.Element => {
   const [session] = useSession();
   const { open, closeDialog, openDialog } = useDialog();
 
-  const { cards, revalidate } = useCards();
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+
   const { tags, mutate } = useTags();
+
+  const { cards, revalidate } = useCards(selectedTags);
 
   const onSubmit = async (data: MemoryCard) => {
     try {
@@ -85,6 +94,7 @@ const AdminPage = (): JSX.Element => {
           tags={tags}
           title="Create new card"
         />
+        <TagsFilter tags={tags} onApply={setSelectedTags} />
         {cards.length > 0 && (
           <Table>
             <TableHead>

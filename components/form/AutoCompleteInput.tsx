@@ -10,6 +10,7 @@ interface AutocompleteInputProps {
   control: Control<any>;
   options: string[];
   label?: string;
+  [key: string]: any;
 }
 
 const AutocompleteInput = ({
@@ -17,6 +18,7 @@ const AutocompleteInput = ({
   control,
   options,
   label,
+  ...other
 }: AutocompleteInputProps): JSX.Element => {
   return (
     <Controller
@@ -25,10 +27,10 @@ const AutocompleteInput = ({
       render={({ field, formState: { errors } }) => (
         <Autocomplete
           multiple
-          freeSolo
           options={options}
           value={field.value}
           onChange={(_, v) => field.onChange(v)}
+          {...other}
           renderInput={(params) => (
             <TextField
               {...params}

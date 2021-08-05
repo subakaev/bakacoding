@@ -92,7 +92,12 @@ const MemoryCardFormDialog = ({
             fullWidth
             disabled={isSubmitting}
           />
-          <AutocompleteInput name="tags" control={control} options={tags} />
+          <AutocompleteInput
+            name="tags"
+            control={control}
+            options={tags}
+            freeSolo
+          />
         </DialogContent>
         <DialogActions>
           <Button
