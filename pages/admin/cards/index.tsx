@@ -19,39 +19,8 @@ import useSWR from "swr";
 import DeleteMemoryCardDialog from "components/dialogs/DeleteMemoryCardDialog";
 import EditMemoryCardDialog from "components/dialogs/EditMemoryCardDialog";
 import TagsFilter from "components/TagsFilter";
-
-const cardsFetcher = (url: string, tags: string[]): Promise<MemoryCard[]> =>
-  axios
-    .get(`${url}?${tags.map((tag) => `tags=${tag}`).join("&")}`)
-    .then((res) => res.data);
-
-const useCards = (tags: string[]) => {
-  const { data, error, revalidate } = useSWR(
-    ["/api/cards", tags],
-    cardsFetcher
-  );
-
-  return {
-    cards: data ?? [],
-    loading: !data && !error,
-    error,
-    revalidate,
-  };
-};
-
-const tagsFetcher = (url: string): Promise<string[]> =>
-  axios.get(url).then((res) => res.data);
-
-const useTags = () => {
-  const { data, error, mutate } = useSWR("/api/tags", tagsFetcher);
-
-  return {
-    tags: data ?? [],
-    loading: !data && !error,
-    error,
-    mutate,
-  };
-};
+import useTags from "lib/api/useTags";
+import useCards from "lib/api/useCards";
 
 const AdminPage = (): JSX.Element => {
   const [session] = useSession();
