@@ -88,8 +88,8 @@ const CardsIndex = (): JSX.Element => {
                 <Accordion>
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header">
+                    aria-controls={`card-${cards[selectedIndex]._id}-answer-content`}
+                    id={`card-${cards[selectedIndex]._id}-answer-heaer`}>
                     <Typography>Answer</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
