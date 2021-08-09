@@ -45,6 +45,7 @@ const AdminPage = (): JSX.Element => {
       });
 
       await mutate();
+      revalidate();
     } catch (e) {
       console.error(e); // TODO: remove console.log
     }
