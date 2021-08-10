@@ -85,15 +85,17 @@ const CardsIndex = (): JSX.Element => {
                 </Typography>
                 <MarkdownText text={cards[selectedIndex].question} />
 
-                <Accordion>
+                <Accordion key={cards[selectedIndex]._id}>
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls={`card-${cards[selectedIndex]._id}-answer-content`}
-                    id={`card-${cards[selectedIndex]._id}-answer-heaer`}>
+                    id={`card-${cards[selectedIndex]._id}-answer-header`}>
                     <Typography>Answer</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
-                    <MarkdownText text={cards[selectedIndex].answer} />
+                    <div>
+                      <MarkdownText text={cards[selectedIndex].answer} />
+                    </div>
                   </AccordionDetails>
                 </Accordion>
                 <Button
