@@ -12,11 +12,47 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  makeStyles,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import MarkdownText from "components/markdown/MarkdownText";
+import SentimentVeryDissatisfiedIcon from "@material-ui/icons/SentimentVeryDissatisfied";
+import SentimentDissatisfiedIcon from "@material-ui/icons/SentimentDissatisfied";
+import SentimentSatisfiedIcon from "@material-ui/icons/SentimentSatisfied";
+
+const useStyles = makeStyles((theme) => ({
+  buttonsContainer: {
+    margin: theme.spacing(3, 0),
+    "& > *": {
+      marginLeft: theme.spacing(3),
+    },
+    "& > :first-child": {
+      marginLeft: 0,
+    },
+  },
+  failed: {
+    background: theme.palette.error.main,
+    "&:hover": {
+      background: theme.palette.error.dark,
+    },
+  },
+  warning: {
+    background: theme.palette.warning.main,
+    "&:hover": {
+      background: theme.palette.warning.dark,
+    },
+  },
+  success: {
+    background: theme.palette.success.main,
+    "&:hover": {
+      background: theme.palette.success.dark,
+    },
+  },
+}));
 
 const CardsIndex = (): JSX.Element => {
+  const classes = useStyles();
+
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   const { tags } = useTags();
@@ -98,12 +134,32 @@ const CardsIndex = (): JSX.Element => {
                     </div>
                   </AccordionDetails>
                 </Accordion>
-                <Button
-                  onClick={nextHandler}
-                  color="primary"
-                  variant="contained">
-                  Next
-                </Button>
+                <Box component="div" className={classes.buttonsContainer}>
+                  <Button
+                    onClick={nextHandler}
+                    color="primary"
+                    variant="contained"
+                    className={classes.failed}
+                    startIcon={<SentimentVeryDissatisfiedIcon />}>
+                    Failed
+                  </Button>
+                  <Button
+                    onClick={nextHandler}
+                    color="primary"
+                    variant="contained"
+                    className={classes.warning}
+                    startIcon={<SentimentDissatisfiedIcon />}>
+                    Warning
+                  </Button>
+                  <Button
+                    onClick={nextHandler}
+                    color="primary"
+                    variant="contained"
+                    className={classes.success}
+                    startIcon={<SentimentSatisfiedIcon />}>
+                    Success
+                  </Button>
+                </Box>
               </>
             )}
             {finished && (
