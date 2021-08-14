@@ -13,22 +13,24 @@ import {
   AccordionSummary,
   AccordionDetails,
   makeStyles,
+  Card,
+  CardHeader,
+  CardContent,
+  CardActions,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import MarkdownText from "components/markdown/MarkdownText";
 import SentimentVeryDissatisfiedIcon from "@material-ui/icons/SentimentVeryDissatisfied";
 import SentimentDissatisfiedIcon from "@material-ui/icons/SentimentDissatisfied";
 import SentimentSatisfiedIcon from "@material-ui/icons/SentimentSatisfied";
+import { MemoryCard } from "types/MemoryCard";
 
 const useStyles = makeStyles((theme) => ({
-  buttonsContainer: {
-    margin: theme.spacing(3, 0),
-    "& > *": {
-      marginLeft: theme.spacing(3),
-    },
-    "& > :first-child": {
-      marginLeft: 0,
-    },
+  cardRoot: {
+    minWidth: 500,
+  },
+  cardTitle: {
+    fontSize: 10,
   },
   failed: {
     background: theme.palette.error.main,
@@ -49,6 +51,79 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
+
+interface MemoryCardItemProps {
+  card: MemoryCard;
+  currentCardNumber: number;
+  totalCardsLength: number;
+  onComplete: () => void;
+}
+
+const MemoryCardItem = ({
+  card,
+  currentCardNumber,
+  totalCardsLength,
+  onComplete,
+}: MemoryCardItemProps) => {
+  const classes = useStyles();
+
+  return (
+    <Card className={classes.cardRoot}>
+      <CardHeader
+        classes={{ title: classes.cardTitle }}
+        title={`#${card._id}`}
+        action={
+          <Typography variant="body2">
+            {currentCardNumber} of {totalCardsLength}
+          </Typography>
+        }
+      />
+      <CardContent>
+        <MarkdownText text={card.question} />
+
+        <Accordion key={card._id}>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls={`card-${card._id}-answer-content`}
+            id={`card-${card._id}-answer-header`}>
+            <Typography>Answer</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <div>
+              <MarkdownText text={card.answer} />
+            </div>
+          </AccordionDetails>
+        </Accordion>
+      </CardContent>
+      <CardActions>
+        <Button
+          onClick={onComplete}
+          color="primary"
+          variant="contained"
+          className={classes.failed}
+          startIcon={<SentimentVeryDissatisfiedIcon />}>
+          Failed
+        </Button>
+        <Button
+          onClick={onComplete}
+          color="primary"
+          variant="contained"
+          className={classes.warning}
+          startIcon={<SentimentDissatisfiedIcon />}>
+          Warning
+        </Button>
+        <Button
+          onClick={onComplete}
+          color="primary"
+          variant="contained"
+          className={classes.success}
+          startIcon={<SentimentSatisfiedIcon />}>
+          Success
+        </Button>
+      </CardActions>
+    </Card>
+  );
+};
 
 const CardsIndex = (): JSX.Element => {
   const classes = useStyles();
@@ -114,53 +189,12 @@ const CardsIndex = (): JSX.Element => {
               </>
             )}
             {started && !finished && (
-              <>
-                <Typography>
-                  Card #{cards[selectedIndex]._id} {selectedIndex + 1} of{" "}
-                  {cards.length}
-                </Typography>
-                <MarkdownText text={cards[selectedIndex].question} />
-
-                <Accordion key={cards[selectedIndex]._id}>
-                  <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls={`card-${cards[selectedIndex]._id}-answer-content`}
-                    id={`card-${cards[selectedIndex]._id}-answer-header`}>
-                    <Typography>Answer</Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <div>
-                      <MarkdownText text={cards[selectedIndex].answer} />
-                    </div>
-                  </AccordionDetails>
-                </Accordion>
-                <Box component="div" className={classes.buttonsContainer}>
-                  <Button
-                    onClick={nextHandler}
-                    color="primary"
-                    variant="contained"
-                    className={classes.failed}
-                    startIcon={<SentimentVeryDissatisfiedIcon />}>
-                    Failed
-                  </Button>
-                  <Button
-                    onClick={nextHandler}
-                    color="primary"
-                    variant="contained"
-                    className={classes.warning}
-                    startIcon={<SentimentDissatisfiedIcon />}>
-                    Warning
-                  </Button>
-                  <Button
-                    onClick={nextHandler}
-                    color="primary"
-                    variant="contained"
-                    className={classes.success}
-                    startIcon={<SentimentSatisfiedIcon />}>
-                    Success
-                  </Button>
-                </Box>
-              </>
+              <MemoryCardItem
+                card={cards[selectedIndex]}
+                currentCardNumber={selectedIndex + 1}
+                totalCardsLength={cards.length}
+                onComplete={nextHandler}
+              />
             )}
             {finished && (
               <>
