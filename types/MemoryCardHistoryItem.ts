@@ -1,3 +1,5 @@
+import { ObjectID } from "mongodb";
+
 /**
  * failed - reset period and start learning from beginning
  * warning - keep same level and don't update the progress
@@ -15,8 +17,8 @@ export interface MemoryCardAttempts {
 
 export interface MemoryCardHistoryItem {
   id: string;
-  userId: string;
-  cardId: string;
+  userId: ObjectID;
+  cardId: ObjectID;
   attempts: MemoryCardAttempts;
   lastAttemptType: MemoryCardAttemptType;
   progress: number;

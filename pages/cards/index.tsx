@@ -25,6 +25,7 @@ import { MemoryCard } from "types/MemoryCard";
 import useSWR from "swr";
 import axios from "axios";
 import { MemoryCardLearningData } from "pages/api/cards";
+import { MemoryCardAttemptType } from "types/MemoryCardHistoryItem";
 
 const useStyles = makeStyles((theme) => ({
   cardRoot: {
@@ -67,6 +68,20 @@ const MemoryCardItem = ({
   onComplete,
 }: MemoryCardItemProps) => {
   const classes = useStyles();
+  const [loading, setLoading] = useState(false);
+
+  const getHandler = (attemptTypeResult: MemoryCardAttemptType) => async () => {
+    try {
+      setLoading(true);
+
+      await axios.put("/api/cards/1", { cardId: card._id, attemptTypeResult });
+
+      onComplete();
+    } catch {
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Card className={classes.cardRoot}>
@@ -98,26 +113,29 @@ const MemoryCardItem = ({
       </CardContent>
       <CardActions>
         <Button
-          onClick={onComplete}
+          onClick={getHandler("failed")}
           color="primary"
           variant="contained"
           className={classes.failed}
+          disabled={loading}
           startIcon={<SentimentVeryDissatisfiedIcon />}>
           Failed
         </Button>
         <Button
-          onClick={onComplete}
+          onClick={getHandler("warning")}
           color="primary"
           variant="contained"
           className={classes.warning}
+          disabled={loading}
           startIcon={<SentimentDissatisfiedIcon />}>
           Warning
         </Button>
         <Button
-          onClick={onComplete}
+          onClick={getHandler("success")}
           color="primary"
           variant="contained"
           className={classes.success}
+          disabled={loading}
           startIcon={<SentimentSatisfiedIcon />}>
           Success
         </Button>
@@ -156,8 +174,6 @@ const CardsIndex = (): JSX.Element => {
   const { tags } = useTags();
 
   const { cards, loading } = useCards(selectedTags);
-
-  console.log(cards);
 
   const [started, setStarted] = useState(false);
   const [finished, setFinished] = useState(false);

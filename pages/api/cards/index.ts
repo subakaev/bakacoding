@@ -41,7 +41,7 @@ async function cardsHandler(
           session?.user?.id
         );
         const cachedHistory: { [cardId: string]: MemoryCardHistoryItem } =
-          _.keyBy(cardsHistoryItems, (item) => item.userId);
+          _.keyBy(cardsHistoryItems, (item) => item.cardId.toString());
 
         const result: MemoryCardLearningData[] = [];
 

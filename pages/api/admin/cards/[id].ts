@@ -38,7 +38,6 @@ async function cardsHandler(
         res.status(405).end(`Method ${method} Not Allowed`);
     }
   } catch (e) {
-    console.log(e);
     res.status(500).end("Internal Server error");
   }
 }
