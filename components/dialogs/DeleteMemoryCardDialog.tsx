@@ -22,7 +22,7 @@ const DeleteMemoryCardDialog = ({
 
   const deleteCard = async () => {
     try {
-      await axios.delete(`/api/cards/${id}`);
+      await axios.delete(`/api/admin/cards/${id}`);
       await onDeleted();
       closeDialog();
     } catch (e) {

@@ -15,12 +15,11 @@ import { getAdminLayout } from "components/layouts/AdminLayout";
 import MemoryCardFormDialog from "components/dialogs/MemoryCardFormDialog";
 import { MemoryCard } from "types/MemoryCard";
 import useDialog from "lib/hooks/useDialog";
-import useSWR from "swr";
 import DeleteMemoryCardDialog from "components/dialogs/DeleteMemoryCardDialog";
 import EditMemoryCardDialog from "components/dialogs/EditMemoryCardDialog";
 import TagsFilter from "components/TagsFilter";
-import useTags from "lib/api/useTags";
-import useCards from "lib/api/useCards";
+import useTags from "lib/hooks/useTags";
+import useCards from "lib/hooks/useCards";
 
 const AdminPage = (): JSX.Element => {
   const [session] = useSession();
@@ -35,7 +34,7 @@ const AdminPage = (): JSX.Element => {
   const onSubmit = async (data: MemoryCard) => {
     try {
       // TODO: use swr mutate here
-      await axios.post("/api/cards", {
+      await axios.post("/api/admin/cards", {
         ...data,
         userId: session?.user.id,
       });

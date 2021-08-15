@@ -1,7 +1,27 @@
-import { connectToDatabase } from "../../../lib/mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import withAuth from "lib/middlewares/auth-middleware";
-import withAdmin from "lib/middlewares/admin-middleware";
+import { getSession } from "next-auth/client";
+import {
+  MemoryCardAttempts,
+  MemoryCardAttemptType,
+  MemoryCardHistoryItem,
+  RepetitionPeriod,
+} from "types/MemoryCardHistoryItem";
+import _ from "lodash";
+import { MemoryCard } from "types/MemoryCard";
+import { getCardsByTags } from "lib/api/cards";
+import { getCardsHistoryForUser } from "lib/api/cards-history";
+
+interface MemoryCardLearningHistory {
+  attempts: MemoryCardAttempts;
+  lastAttemptType: MemoryCardAttemptType;
+  progress: number;
+  repetitionPeriod: RepetitionPeriod;
+}
+
+export interface MemoryCardLearningData {
+  card: MemoryCard;
+  history?: MemoryCardLearningHistory;
+}
 
 async function cardsHandler(
   req: NextApiRequest,
@@ -10,37 +30,51 @@ async function cardsHandler(
   try {
     const { method } = req;
 
-    const conn = await connectToDatabase();
-
-    const db = conn.db;
-
-    const card = req.body;
+    const session = await getSession({ req });
 
     switch (method) {
       case "GET":
         const tags = [req.query.tags ?? []].flat();
-        const cards = await db
-          .collection("cards")
-          .find(tags.length > 0 ? { tags: { $elemMatch: { $in: tags } } } : {})
-          .sort({ _id: -1 })
-          .toArray();
-        res.status(200).json(cards);
-        break;
-      case "POST":
-        const result = await db.collection("cards").insertOne(card);
-        const inserted = await db
-          .collection("cards")
-          .findOne({ _id: result.insertedId });
-        res.status(201).json(inserted);
+        const cards = await getCardsByTags(tags);
+
+        const cardsHistoryItems = await getCardsHistoryForUser(
+          session?.user?.id
+        );
+        const cachedHistory: { [cardId: string]: MemoryCardHistoryItem } =
+          _.keyBy(cardsHistoryItems, (item) => item.userId);
+
+        const result: MemoryCardLearningData[] = [];
+
+        const now = new Date();
+
+        for (const card of cards) {
+          if (!_.has(cachedHistory, card._id)) {
+            result.push({ card });
+          } else {
+            const historyItem = cachedHistory[card._id];
+
+            if (historyItem.nextRepetitionDate <= now) {
+              result.push({
+                card,
+                history: {
+                  attempts: historyItem.attempts,
+                  lastAttemptType: historyItem.lastAttemptType,
+                  progress: historyItem.progress,
+                  repetitionPeriod: historyItem.repetitionPeriod,
+                },
+              });
+            }
+          }
+        }
+        res.status(200).json(result);
         break;
       default:
-        res.setHeader("Allow", ["GET", "POST"]);
+        res.setHeader("Allow", ["GET"]);
         res.status(405).end(`Method ${method} Not Allowed`);
     }
-  } catch (e) {
-    console.log(e);
+  } catch {
     res.status(500).end("Internal Server error");
   }
 }
 
-export default withAuth(withAdmin(cardsHandler));
+export default cardsHandler;

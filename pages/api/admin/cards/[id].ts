@@ -1,5 +1,5 @@
 import { Db, ObjectID } from "mongodb";
-import { connectToDatabase } from "../../../lib/mongodb";
+import { connectToDatabase } from "lib/mongodb";
 import omit from "lodash/omit";
 import { NextApiRequest, NextApiResponse } from "next";
 import withAuth from "lib/middlewares/auth-middleware";

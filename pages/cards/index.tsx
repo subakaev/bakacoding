@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { getLayout } from "components/layouts/Layout";
 import TagsFilter from "components/TagsFilter";
-import useTags from "lib/api/useTags";
-import _ from "lodash";
-import useCards from "lib/api/useCards";
+import useTags from "lib/hooks/useTags";
 import {
   Box,
   CircularProgress,
@@ -24,6 +22,9 @@ import SentimentVeryDissatisfiedIcon from "@material-ui/icons/SentimentVeryDissa
 import SentimentDissatisfiedIcon from "@material-ui/icons/SentimentDissatisfied";
 import SentimentSatisfiedIcon from "@material-ui/icons/SentimentSatisfied";
 import { MemoryCard } from "types/MemoryCard";
+import useSWR from "swr";
+import axios from "axios";
+import { MemoryCardLearningData } from "pages/api/cards";
 
 const useStyles = makeStyles((theme) => ({
   cardRoot: {
@@ -125,14 +126,38 @@ const MemoryCardItem = ({
   );
 };
 
-const CardsIndex = (): JSX.Element => {
-  const classes = useStyles();
+const cardsFetcher = (
+  url: string,
+  tags: string[]
+): Promise<MemoryCardLearningData[]> =>
+  axios
+    .get(`${url}?${tags.map((tag) => `tags=${tag}`).join("&")}`)
+    .then((res) => res.data);
 
+//TODO:
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const useCards = (tags: string[]) => {
+  const { data, error, revalidate } = useSWR(
+    ["/api/cards", tags],
+    cardsFetcher
+  );
+
+  return {
+    cards: data ?? [],
+    loading: !data && !error,
+    error,
+    revalidate,
+  };
+};
+
+const CardsIndex = (): JSX.Element => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   const { tags } = useTags();
 
   const { cards, loading } = useCards(selectedTags);
+
+  console.log(cards);
 
   const [started, setStarted] = useState(false);
   const [finished, setFinished] = useState(false);
@@ -190,7 +215,7 @@ const CardsIndex = (): JSX.Element => {
             )}
             {started && !finished && (
               <MemoryCardItem
-                card={cards[selectedIndex]}
+                card={cards[selectedIndex].card}
                 currentCardNumber={selectedIndex + 1}
                 totalCardsLength={cards.length}
                 onComplete={nextHandler}

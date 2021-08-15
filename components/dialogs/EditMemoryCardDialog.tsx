@@ -19,7 +19,7 @@ const EditMemoryCardDialog = ({
 
   const updateCard = async (data: MemoryCard) => {
     // TODO: use mutate here?
-    await axios.put(`/api/cards/${card._id}`, data);
+    await axios.put(`/api/admin/cards/${card._id}`, data);
 
     await onChanged();
     closeDialog();
