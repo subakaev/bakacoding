@@ -15,7 +15,7 @@ const withAuth = (
     const session = await getSession({ req });
 
     if (session == null) {
-      return res.status(403).send("Forbidden");
+      return res.status(401).send("Not authenticated");
     }
 
     req.session = session;

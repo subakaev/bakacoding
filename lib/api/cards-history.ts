@@ -15,20 +15,23 @@ export async function getCardsHistoryForUser(
   return [];
 }
 
-// TODO: get history item by its own id
-export async function getCardHistoryItem(
-  userId: string,
-  cardId: string
+export async function getCardHistoryItemById(
+  id: string
 ): Promise<MemoryCardHistoryItem | null> {
   const { db } = await connectToDatabase();
-
   return db
     .collection<MemoryCardHistoryItem>("cards-history")
-    .findOne({ userId: new ObjectId(userId), cardId: new ObjectId(cardId) });
+    .findOne({ _id: new ObjectId(id) });
+}
+
+export async function addCardHistoryItem(
+  item: Omit<MemoryCardHistoryItem, "_id">
+): Promise<MemoryCardHistoryItem> {
+  return updateCardHistoryItem(item);
 }
 
 export async function updateCardHistoryItem(
-  item: Omit<MemoryCardHistoryItem, "id">
+  item: Omit<MemoryCardHistoryItem, "_id">
 ): Promise<MemoryCardHistoryItem> {
   const { db } = await connectToDatabase();
 

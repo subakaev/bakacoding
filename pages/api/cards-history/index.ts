@@ -1,7 +1,4 @@
-import {
-  getCardHistoryItem,
-  updateCardHistoryItem,
-} from "lib/api/cards-history";
+import { addCardHistoryItem } from "lib/api/cards-history";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/client";
 import {
@@ -10,6 +7,7 @@ import {
 } from "types/MemoryCardHistoryItem";
 import * as Luxon from "luxon";
 import { ObjectId } from "mongodb";
+import withAuth from "lib/middlewares/auth-middleware";
 
 const maxRepetitions = {
   daily: 7,
@@ -18,13 +16,13 @@ const maxRepetitions = {
 
 const updateCardHistory = (
   item: MemoryCardHistoryItem | null,
-  userId: string,
-  cardId: string,
+  userId: ObjectId,
+  cardId: ObjectId,
   attemptTypeResult: MemoryCardAttemptType
-): Omit<MemoryCardHistoryItem, "id"> => {
-  const result: Omit<MemoryCardHistoryItem, "id"> = item ?? {
-    cardId: new ObjectId(cardId),
-    userId: new ObjectId(userId),
+): Omit<MemoryCardHistoryItem, "_id"> => {
+  const result: Omit<MemoryCardHistoryItem, "_id"> = item ?? {
+    cardId,
+    userId,
     lastAttemptType: attemptTypeResult,
     repetitionPeriod: "daily",
     progress: 0,
@@ -91,33 +89,25 @@ async function cardsHandler(
 
     const session = await getSession({ req });
 
-    if (!session?.user) {
-      res.status(401).end("User should be authenticated");
-      return;
-    }
+    const { cardId, attemptTypeResult } = req.body;
+
+    const userId = session?.user?.id ?? "";
 
     switch (method) {
-      case "PUT":
-        const { cardId, attemptTypeResult } = req.body;
-
-        const userId = session.user.id;
-
-        const historyItem = await getCardHistoryItem(userId, cardId);
-
-        const updatedItem = updateCardHistory(
-          historyItem,
-          userId,
-          cardId,
+      case "POST":
+        const newItem = updateCardHistory(
+          null,
+          new ObjectId(userId),
+          new ObjectId(cardId),
           attemptTypeResult
         );
 
-        const result = await updateCardHistoryItem(updatedItem);
+        const result = await addCardHistoryItem(newItem);
 
         res.status(200).json(result);
-
         break;
       default:
-        res.setHeader("Allow", ["PUT"]);
+        res.setHeader("Allow", ["POST"]);
         res.status(405).end(`Method ${method} Not Allowed`);
     }
   } catch (e) {
@@ -125,4 +115,4 @@ async function cardsHandler(
   }
 }
 
-export default cardsHandler;
+export default withAuth(cardsHandler);

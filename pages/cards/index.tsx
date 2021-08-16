@@ -24,7 +24,10 @@ import SentimentSatisfiedIcon from "@material-ui/icons/SentimentSatisfied";
 import { MemoryCard } from "types/MemoryCard";
 import useSWR from "swr";
 import axios from "axios";
-import { MemoryCardLearningData } from "pages/api/cards";
+import {
+  MemoryCardLearningData,
+  MemoryCardLearningHistory,
+} from "pages/api/cards/study";
 import { MemoryCardAttemptType } from "types/MemoryCardHistoryItem";
 
 const useStyles = makeStyles((theme) => ({
@@ -56,6 +59,7 @@ const useStyles = makeStyles((theme) => ({
 
 interface MemoryCardItemProps {
   card: MemoryCard;
+  history?: MemoryCardLearningHistory;
   currentCardNumber: number;
   totalCardsLength: number;
   onComplete: () => void;
@@ -63,6 +67,7 @@ interface MemoryCardItemProps {
 
 const MemoryCardItem = ({
   card,
+  history,
   currentCardNumber,
   totalCardsLength,
   onComplete,
@@ -74,7 +79,16 @@ const MemoryCardItem = ({
     try {
       setLoading(true);
 
-      await axios.put("/api/cards/1", { cardId: card._id, attemptTypeResult });
+      if (!!history) {
+        await axios.put(`/api/cards-history/${history._id}`, {
+          attemptTypeResult,
+        });
+      } else {
+        await axios.post("/api/cards-history", {
+          cardId: card._id,
+          attemptTypeResult,
+        });
+      }
 
       onComplete();
     } catch {
@@ -156,7 +170,7 @@ const cardsFetcher = (
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useCards = (tags: string[]) => {
   const { data, error, revalidate } = useSWR(
-    ["/api/cards", tags],
+    ["/api/cards/study", tags],
     cardsFetcher
   );
 
@@ -232,6 +246,7 @@ const CardsIndex = (): JSX.Element => {
             {started && !finished && (
               <MemoryCardItem
                 card={cards[selectedIndex].card}
+                history={cards[selectedIndex].history}
                 currentCardNumber={selectedIndex + 1}
                 totalCardsLength={cards.length}
                 onComplete={nextHandler}

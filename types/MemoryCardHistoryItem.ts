@@ -1,4 +1,4 @@
-import { ObjectID } from "mongodb";
+import { ObjectId } from "mongodb";
 
 /**
  * failed - reset period and start learning from beginning
@@ -16,9 +16,9 @@ export interface MemoryCardAttempts {
 }
 
 export interface MemoryCardHistoryItem {
-  id: string;
-  userId: ObjectID;
-  cardId: ObjectID;
+  _id: ObjectId;
+  userId: ObjectId;
+  cardId: ObjectId;
   attempts: MemoryCardAttempts;
   lastAttemptType: MemoryCardAttemptType;
   progress: number;

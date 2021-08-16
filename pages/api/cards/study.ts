@@ -10,8 +10,10 @@ import _ from "lodash";
 import { MemoryCard } from "types/MemoryCard";
 import { getCardsByTags } from "lib/api/cards";
 import { getCardsHistoryForUser } from "lib/api/cards-history";
+import { ObjectId } from "mongodb";
 
-interface MemoryCardLearningHistory {
+export interface MemoryCardLearningHistory {
+  _id: ObjectId;
   attempts: MemoryCardAttempts;
   lastAttemptType: MemoryCardAttemptType;
   progress: number;
@@ -57,6 +59,7 @@ async function cardsHandler(
               result.push({
                 card,
                 history: {
+                  _id: historyItem._id,
                   attempts: historyItem.attempts,
                   lastAttemptType: historyItem.lastAttemptType,
                   progress: historyItem.progress,
