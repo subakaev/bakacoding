@@ -16,12 +16,19 @@ export async function getCardsHistoryForUser(
 }
 
 export async function getCardHistoryItemById(
-  id: ObjectId
-): Promise<MemoryCardHistoryItem | null> {
+  _id: ObjectId
+): Promise<MemoryCardHistoryItem> {
   const { db } = await connectToDatabase();
-  return db
+
+  const historyItem = await db
     .collection<MemoryCardHistoryItem>("cards-history")
-    .findOne({ _id: id });
+    .findOne({ _id });
+
+  if (historyItem == null) {
+    throw new Error(`Cannot find card history item with id=${_id}`);
+  }
+
+  return historyItem;
 }
 
 export async function addCardHistoryItem(
@@ -31,13 +38,7 @@ export async function addCardHistoryItem(
 
   const insertResult = await db.collection("cards-history").insertOne(item);
 
-  const result = await getCardHistoryItemById(insertResult.insertedId);
-
-  if (result == null) {
-    throw new Error("Should find item");
-  }
-
-  return result;
+  return getCardHistoryItemById(insertResult.insertedId);
 }
 
 export async function updateCardHistoryItem(
@@ -54,11 +55,5 @@ export async function updateCardHistoryItem(
     }
   );
 
-  const result = await getCardHistoryItemById(_id);
-
-  if (result == null) {
-    throw new Error("Should find item");
-  }
-
-  return result;
+  return getCardHistoryItemById(_id);
 }
