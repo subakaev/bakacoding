@@ -16,6 +16,7 @@ const CardsPlayerContext =
   createContext<CardsPlayerContextProps>(contextDefaults);
 
 export const CardsPlayerContextProvider: FunctionComponent = ({ children }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [cards, setCards] = useState<MemoryCard[]>([]);
 
   return (

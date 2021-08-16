@@ -1,7 +1,8 @@
-import { connectToDatabase } from "../../../lib/mongodb";
+import { connectToDatabase } from "lib/mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import withAuth from "lib/middlewares/auth-middleware";
 import withAdmin from "lib/middlewares/admin-middleware";
+import { getCardsByTags } from "lib/api/cards";
 
 async function cardsHandler(
   req: NextApiRequest,
@@ -19,11 +20,7 @@ async function cardsHandler(
     switch (method) {
       case "GET":
         const tags = [req.query.tags ?? []].flat();
-        const cards = await db
-          .collection("cards")
-          .find(tags.length > 0 ? { tags: { $elemMatch: { $in: tags } } } : {})
-          .sort({ _id: -1 })
-          .toArray();
+        const cards = await getCardsByTags(tags);
         res.status(200).json(cards);
         break;
       case "POST":
@@ -38,7 +35,6 @@ async function cardsHandler(
         res.status(405).end(`Method ${method} Not Allowed`);
     }
   } catch (e) {
-    console.log(e);
     res.status(500).end("Internal Server error");
   }
 }

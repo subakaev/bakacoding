@@ -11,7 +11,7 @@ const cardsFetcher = (url: string, tags: string[]): Promise<MemoryCard[]> =>
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useCards = (tags: string[]) => {
   const { data, error, revalidate } = useSWR(
-    ["/api/cards", tags],
+    ["/api/admin/cards", tags],
     cardsFetcher
   );
 

@@ -1,20 +1,36 @@
 import { useState } from "react";
 import { getLayout } from "components/layouts/Layout";
 import TagsFilter from "components/TagsFilter";
-import useTags from "lib/api/useTags";
-import _ from "lodash";
-import useCards from "lib/api/useCards";
-import {
-  Box,
-  CircularProgress,
-  Typography,
-  Button,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-} from "@material-ui/core";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import MarkdownText from "components/markdown/MarkdownText";
+import useTags from "lib/hooks/useTags";
+import { Box, CircularProgress, Typography, Button } from "@material-ui/core";
+import useSWR from "swr";
+import axios from "axios";
+import { MemoryCardStudyData } from "types/study";
+import StudyingCard from "components/study/StudyingCard";
+
+const cardsFetcher = (
+  url: string,
+  tags: string[]
+): Promise<MemoryCardStudyData[]> =>
+  axios
+    .get(`${url}?${tags.map((tag) => `tags=${tag}`).join("&")}`)
+    .then((res) => res.data);
+
+//TODO:
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const useCards = (tags: string[]) => {
+  const { data, error, revalidate } = useSWR(
+    ["/api/cards/study", tags],
+    cardsFetcher
+  );
+
+  return {
+    cards: data ?? [],
+    loading: !data && !error,
+    error,
+    revalidate,
+  };
+};
 
 const CardsIndex = (): JSX.Element => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -78,33 +94,13 @@ const CardsIndex = (): JSX.Element => {
               </>
             )}
             {started && !finished && (
-              <>
-                <Typography>
-                  Card #{cards[selectedIndex]._id} {selectedIndex + 1} of{" "}
-                  {cards.length}
-                </Typography>
-                <MarkdownText text={cards[selectedIndex].question} />
-
-                <Accordion key={cards[selectedIndex]._id}>
-                  <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls={`card-${cards[selectedIndex]._id}-answer-content`}
-                    id={`card-${cards[selectedIndex]._id}-answer-header`}>
-                    <Typography>Answer</Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <div>
-                      <MarkdownText text={cards[selectedIndex].answer} />
-                    </div>
-                  </AccordionDetails>
-                </Accordion>
-                <Button
-                  onClick={nextHandler}
-                  color="primary"
-                  variant="contained">
-                  Next
-                </Button>
-              </>
+              <StudyingCard
+                card={cards[selectedIndex].card}
+                history={cards[selectedIndex].history}
+                currentCardNumber={selectedIndex + 1}
+                totalCardsLength={cards.length}
+                onComplete={nextHandler}
+              />
             )}
             {finished && (
               <>

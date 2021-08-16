@@ -10,6 +10,7 @@ interface AutocompleteInputProps {
   control: Control<any>;
   options: string[];
   label?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }
 
