@@ -1,29 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/client";
-import {
-  MemoryCardAttempts,
-  MemoryCardAttemptType,
-  MemoryCardHistoryItem,
-  RepetitionPeriod,
-} from "types/MemoryCardHistoryItem";
-import _ from "lodash";
-import { MemoryCard } from "types/MemoryCard";
-import { getCardsByTags } from "lib/api/cards";
-import { getCardsHistoryForUser } from "lib/api/cards-history";
-import { ObjectId } from "mongodb";
-
-export interface MemoryCardLearningHistory {
-  _id: ObjectId;
-  attempts: MemoryCardAttempts;
-  lastAttemptType: MemoryCardAttemptType;
-  progress: number;
-  repetitionPeriod: RepetitionPeriod;
-}
-
-export interface MemoryCardLearningData {
-  card: MemoryCard;
-  history?: MemoryCardLearningHistory;
-}
+import { getCardsForStudying } from "lib/services/study";
 
 async function cardsHandler(
   req: NextApiRequest,
@@ -37,39 +14,10 @@ async function cardsHandler(
     switch (method) {
       case "GET":
         const tags = [req.query.tags ?? []].flat();
-        const cards = await getCardsByTags(tags);
 
-        const cardsHistoryItems = await getCardsHistoryForUser(
-          session?.user?.id
-        );
-        const cachedHistory: { [cardId: string]: MemoryCardHistoryItem } =
-          _.keyBy(cardsHistoryItems, (item) => item.cardId.toString());
+        const data = await getCardsForStudying(tags, session?.user?.id);
 
-        const result: MemoryCardLearningData[] = [];
-
-        const now = new Date();
-
-        for (const card of cards) {
-          if (!_.has(cachedHistory, card._id)) {
-            result.push({ card });
-          } else {
-            const historyItem = cachedHistory[card._id];
-
-            if (historyItem.nextRepetitionDate <= now) {
-              result.push({
-                card,
-                history: {
-                  _id: historyItem._id,
-                  attempts: historyItem.attempts,
-                  lastAttemptType: historyItem.lastAttemptType,
-                  progress: historyItem.progress,
-                  repetitionPeriod: historyItem.repetitionPeriod,
-                },
-              });
-            }
-          }
-        }
-        res.status(200).json(result);
+        res.status(200).json(data);
         break;
       default:
         res.setHeader("Allow", ["GET"]);

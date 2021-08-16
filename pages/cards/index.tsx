@@ -24,11 +24,8 @@ import SentimentSatisfiedIcon from "@material-ui/icons/SentimentSatisfied";
 import { MemoryCard } from "types/MemoryCard";
 import useSWR from "swr";
 import axios from "axios";
-import {
-  MemoryCardLearningData,
-  MemoryCardLearningHistory,
-} from "pages/api/cards/study";
 import { MemoryCardAttemptType } from "types/MemoryCardHistoryItem";
+import { MemoryCardsStudyingHistory, MemoryCardStudyData } from "types/study";
 
 const useStyles = makeStyles((theme) => ({
   cardRoot: {
@@ -59,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
 
 interface MemoryCardItemProps {
   card: MemoryCard;
-  history?: MemoryCardLearningHistory;
+  history?: MemoryCardsStudyingHistory;
   currentCardNumber: number;
   totalCardsLength: number;
   onComplete: () => void;
@@ -161,7 +158,7 @@ const MemoryCardItem = ({
 const cardsFetcher = (
   url: string,
   tags: string[]
-): Promise<MemoryCardLearningData[]> =>
+): Promise<MemoryCardStudyData[]> =>
   axios
     .get(`${url}?${tags.map((tag) => `tags=${tag}`).join("&")}`)
     .then((res) => res.data);

@@ -16,36 +16,45 @@ export async function getCardsHistoryForUser(
 }
 
 export async function getCardHistoryItemById(
-  id: string
+  id: ObjectId
 ): Promise<MemoryCardHistoryItem | null> {
   const { db } = await connectToDatabase();
   return db
     .collection<MemoryCardHistoryItem>("cards-history")
-    .findOne({ _id: new ObjectId(id) });
+    .findOne({ _id: id });
 }
 
 export async function addCardHistoryItem(
   item: Omit<MemoryCardHistoryItem, "_id">
 ): Promise<MemoryCardHistoryItem> {
-  return updateCardHistoryItem(item);
+  const { db } = await connectToDatabase();
+
+  const insertResult = await db.collection("cards-history").insertOne(item);
+
+  const result = await getCardHistoryItemById(insertResult.insertedId);
+
+  if (result == null) {
+    throw new Error("Should find item");
+  }
+
+  return result;
 }
 
 export async function updateCardHistoryItem(
+  _id: ObjectId,
   item: Omit<MemoryCardHistoryItem, "_id">
 ): Promise<MemoryCardHistoryItem> {
   const { db } = await connectToDatabase();
 
   await db.collection("cards-history").updateOne(
-    { userId: item.userId, cardId: item.cardId },
+    { _id },
     { $set: item },
     {
       upsert: true,
     }
   );
 
-  const result = await db
-    .collection<MemoryCardHistoryItem>("cards-history")
-    .findOne({ userId: item.userId, cardId: item.cardId });
+  const result = await getCardHistoryItemById(_id);
 
   if (result == null) {
     throw new Error("Should find item");

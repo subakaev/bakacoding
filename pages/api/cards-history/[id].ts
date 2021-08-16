@@ -93,7 +93,9 @@ async function cardsHandler(
 
     switch (method) {
       case "PUT":
-        const historyItem = await getCardHistoryItemById(String(req.query.id));
+        const historyItem = await getCardHistoryItemById(
+          new ObjectId(req.query.id as string)
+        );
 
         if (historyItem == null) {
           res.status(400).json({
@@ -109,7 +111,10 @@ async function cardsHandler(
           attemptTypeResult
         );
 
-        const result = await updateCardHistoryItem(updatedItem);
+        const result = await updateCardHistoryItem(
+          historyItem._id,
+          updatedItem
+        );
 
         res.status(200).json(result);
 
