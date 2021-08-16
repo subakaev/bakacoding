@@ -35,4 +35,4 @@ async function tagsHandler(
   }
 }
 
-export default withAuth(withAdmin(tagsHandler));
+export default tagsHandler;

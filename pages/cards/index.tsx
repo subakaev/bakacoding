@@ -26,6 +26,7 @@ import useSWR from "swr";
 import axios from "axios";
 import { MemoryCardAttemptType } from "types/MemoryCardHistoryItem";
 import { MemoryCardsStudyingHistory, MemoryCardStudyData } from "types/study";
+import { useSession } from "next-auth/client";
 
 const useStyles = makeStyles((theme) => ({
   cardRoot: {
@@ -71,20 +72,24 @@ const MemoryCardItem = ({
 }: MemoryCardItemProps) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
+  const [session] = useSession();
 
   const getHandler = (attemptTypeResult: MemoryCardAttemptType) => async () => {
     try {
       setLoading(true);
 
-      if (!!history) {
-        await axios.put(`/api/cards-history/${history._id}`, {
-          attemptTypeResult,
-        });
-      } else {
-        await axios.post("/api/cards-history", {
-          cardId: card._id,
-          attemptTypeResult,
-        });
+      // TODO: session.isAuthenticated
+      if (session?.user) {
+        if (!!history) {
+          await axios.put(`/api/cards-history/${history._id}`, {
+            attemptTypeResult,
+          });
+        } else {
+          await axios.post("/api/cards-history", {
+            cardId: card._id,
+            attemptTypeResult,
+          });
+        }
       }
 
       onComplete();
