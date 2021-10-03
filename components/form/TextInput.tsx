@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // TODO: fix any types
 import { Control, Controller } from "react-hook-form";
-import { TextField } from "@material-ui/core";
+import { TextField } from "@mui/material";
 
 interface TextInputProps {
   name: string;

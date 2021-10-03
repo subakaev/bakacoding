@@ -1,5 +1,5 @@
-import { Button, TextField, Box } from "@material-ui/core";
-import FileCopyIcon from "@material-ui/icons/FileCopy";
+import { Button, TextField, Box } from "@mui/material";
+import FileCopyIcon from "@mui/icons-material/FileCopy";
 
 interface InterviewResultProps {
   value: string;

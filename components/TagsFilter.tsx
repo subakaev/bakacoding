@@ -1,4 +1,4 @@
-import { Box, Button } from "@material-ui/core";
+import { Box, Button } from "@mui/material";
 import React from "react";
 import { useForm } from "react-hook-form";
 import AutocompleteInput from "./form/AutoCompleteInput";

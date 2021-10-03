@@ -1,7 +1,7 @@
-import { IconButton, Button, TextField, Box, Divider } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
-import DeleteIcon from "@material-ui/icons/Delete";
-import SaveIcon from "@material-ui/icons/Save";
+import { IconButton, Button, TextField, Box, Divider } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
+import SaveIcon from "@mui/icons-material/Save";
 import { useForm, useFieldArray, Controller, Control } from "react-hook-form";
 import { v4 as uuid } from "uuid";
 import store from "store2";

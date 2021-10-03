@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardContent,
   CardActions,
-} from "@material-ui/core";
+} from "@mui/material";
 import _ from "lodash";
 import { getEntryById } from "lib/contentful";
 import MarkdownText from "./markdown/MarkdownText";

@@ -1,6 +1,6 @@
 import Document from "next/document";
 import { Children } from "react";
-import { ServerStyleSheets } from "@material-ui/core";
+import { ServerStyleSheets } from "@mui/styles";
 
 class MyDocument extends Document {}
 

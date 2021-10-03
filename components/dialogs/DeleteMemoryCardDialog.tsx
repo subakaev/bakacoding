@@ -6,10 +6,10 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-} from "@material-ui/core";
+} from "@mui/material";
 import axios from "axios";
 import useDialog from "lib/hooks/useDialog";
-import DeleteIcon from "@material-ui/icons/Delete";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const DeleteMemoryCardDialog = ({
   id,

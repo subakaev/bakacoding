@@ -1,5 +1,5 @@
 import React from "react";
-import { Paper, Box, Button } from "@material-ui/core";
+import { Paper, Box, Button } from "@mui/material";
 import Link from "next/link";
 import { getAdminLayout } from "components/layouts/AdminLayout";
 

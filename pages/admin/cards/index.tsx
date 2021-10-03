@@ -8,7 +8,7 @@ import {
   TableRow,
   TableBody,
   TableHead,
-} from "@material-ui/core";
+} from "@mui/material";
 import { useSession } from "next-auth/client";
 import axios from "axios";
 import { getAdminLayout } from "components/layouts/AdminLayout";

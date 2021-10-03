@@ -10,12 +10,12 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-} from "@material-ui/core";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+  Typography,
+  CardHeader,
+} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useState } from "react";
 import { getEntriesByTags } from "lib/contentful";
-import { Typography } from "@material-ui/core";
-import { CardHeader } from "@material-ui/core";
 import MarkdownText from "components/markdown/MarkdownText";
 import initialTags, { ContentfulTag } from "lib/tags";
 

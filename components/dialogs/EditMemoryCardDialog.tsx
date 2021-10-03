@@ -1,8 +1,8 @@
 import React from "react";
-import { IconButton } from "@material-ui/core";
+import { IconButton } from "@mui/material";
 import axios from "axios";
 import useDialog from "lib/hooks/useDialog";
-import EditIcon from "@material-ui/icons/Edit";
+import EditIcon from "@mui/icons-material/Edit";
 import MemoryCardFormDialog from "./MemoryCardFormDialog";
 import { MemoryCard } from "types/MemoryCard";
 

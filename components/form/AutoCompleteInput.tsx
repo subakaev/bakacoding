@@ -1,6 +1,6 @@
 import { Controller, Control } from "react-hook-form";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import TextField from "@material-ui/core/TextField";
+import Autocomplete from "@mui/lab/Autocomplete";
+import TextField from "@mui/material/TextField";
 import { capitalize } from "lodash";
 
 interface AutocompleteInputProps {

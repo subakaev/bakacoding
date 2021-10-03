@@ -2,7 +2,7 @@ import { getLayout } from "components/layouts/Layout";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getEntriesByTags } from "lib/contentful";
 import ContentfulCodeTaskTrainer from "components/ContentfulCodeTaskTrainer";
-import { Paper } from "@material-ui/core";
+import { Paper } from "@mui/material";
 
 const BfeCoding = (
   props: InferGetServerSidePropsType<typeof getServerSideProps>

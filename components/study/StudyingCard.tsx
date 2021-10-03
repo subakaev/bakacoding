@@ -5,24 +5,25 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  makeStyles,
   Card,
   CardHeader,
   CardContent,
   CardActions,
-} from "@material-ui/core";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+  Theme,
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MarkdownText from "components/markdown/MarkdownText";
-import SentimentVeryDissatisfiedIcon from "@material-ui/icons/SentimentVeryDissatisfied";
-import SentimentDissatisfiedIcon from "@material-ui/icons/SentimentDissatisfied";
-import SentimentSatisfiedIcon from "@material-ui/icons/SentimentSatisfied";
+import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
+import SentimentDissatisfiedIcon from "@mui/icons-material/SentimentDissatisfied";
+import SentimentSatisfiedIcon from "@mui/icons-material/SentimentSatisfied";
 import { MemoryCard } from "types/MemoryCard";
 import axios from "axios";
 import { MemoryCardAttemptType } from "types/MemoryCardHistoryItem";
 import { MemoryCardsStudyingHistory } from "types/study";
 import { useSession } from "next-auth/client";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   cardRoot: {
     minWidth: 500,
   },

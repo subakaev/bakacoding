@@ -1,8 +1,8 @@
-import { makeStyles } from "@material-ui/core";
-import { ToggleButtonGroup, ToggleButton } from "@material-ui/lab";
-import DoneIcon from "@material-ui/icons/Done";
-import ClearIcon from "@material-ui/icons/Clear";
-import WarningIcon from "@material-ui/icons/Warning";
+import { makeStyles } from "@mui/styles";
+import { ToggleButtonGroup, ToggleButton } from "@mui/lab";
+import DoneIcon from "@mui/icons-material/Done";
+import ClearIcon from "@mui/icons-material/Clear";
+import WarningIcon from "@mui/icons-material/Warning";
 import { Grade } from "../../types/interview";
 
 const useStyles = makeStyles({
