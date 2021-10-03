@@ -1,5 +1,5 @@
 import { getLayout } from "components/layouts/Layout";
-import { Paper, Box, Button } from "@material-ui/core";
+import { Paper, Box, Button } from "@mui/material";
 import Link from "next/link";
 
 const InterviewPage = (): JSX.Element => {

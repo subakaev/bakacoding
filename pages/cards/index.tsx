@@ -2,7 +2,7 @@ import { useState } from "react";
 import { getLayout } from "components/layouts/Layout";
 import TagsFilter from "components/TagsFilter";
 import useTags from "lib/hooks/useTags";
-import { Box, CircularProgress, Typography, Button } from "@material-ui/core";
+import { Box, CircularProgress, Typography, Button } from "@mui/material";
 import useSWR from "swr";
 import axios from "axios";
 import { MemoryCardStudyData } from "types/study";

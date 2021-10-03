@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // TODO: fix any types here
 import React from "react";
-import { ThemeProvider, CssBaseline, createMuiTheme } from "@material-ui/core";
 import { Provider } from "next-auth/client";
 import "../styles/globals.css";
+import { CssBaseline, createTheme, ThemeProvider } from "@mui/material";
 
-const theme = createMuiTheme();
+const theme = createTheme();
 
 const MyApp = ({
   Component,

@@ -6,13 +6,13 @@ import {
   DialogActions,
   Button,
   CircularProgress,
-} from "@material-ui/core";
+} from "@mui/material";
 import { useForm } from "react-hook-form";
 import TextInput from "components/form/TextInput";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import AutocompleteInput from "components/form/AutoCompleteInput";
-import { Cancel, Save } from "@material-ui/icons";
+import { Cancel, Save } from "@mui/icons-material";
 import { MemoryCard } from "types/MemoryCard";
 import MarkdownInput from "components/form/MarkdownInput";
 

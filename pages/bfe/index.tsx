@@ -1,6 +1,6 @@
 import { getLayout } from "components/layouts/Layout";
 import Link from "next/link";
-import { List, ListItem, ListItemText } from "@material-ui/core";
+import { List, ListItem, ListItemText } from "@mui/material";
 import _ from "lodash";
 
 const bfeLinks = ["coding", "answer", "design", "enjoy", "typescript"];

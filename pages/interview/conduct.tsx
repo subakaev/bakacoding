@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { getLayout } from "components/layouts/Layout";
-import { Paper, Box, Button } from "@material-ui/core";
+import { Paper, Box, Button } from "@mui/material";
 import store from "store2";
 import { InterviewQuestionSet } from "../../types/interview";
 import InterviewForm from "components/interview/InterviewForm";
 import InterviewResult from "components/interview/InterviewResult";
 import Link from "next/link";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const ConductInterviewPage = (): JSX.Element => {
   const [questionSets] = useState<InterviewQuestionSet[]>(

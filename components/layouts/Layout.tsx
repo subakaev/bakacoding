@@ -5,9 +5,9 @@ import {
   Box,
   Toolbar,
   Typography,
-  makeStyles,
   Container,
-} from "@material-ui/core";
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import { FunctionComponent } from "react";
 import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/client";

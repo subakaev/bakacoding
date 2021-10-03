@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // TODO: fix any
-import { Box, Tab, Tabs } from "@material-ui/core";
+import { Box, Tab, Tabs } from "@mui/material";
 import MarkdownText from "components/markdown/MarkdownText";
 import React from "react";
 import { Control, UseFormGetValues } from "react-hook-form";
@@ -53,10 +53,7 @@ const MarkdownInput = ({
 }: TextInputProps): JSX.Element => {
   const [value, setValue] = React.useState(0);
 
-  const handleChange = (
-    event: React.ChangeEvent<Record<string, never>>,
-    newValue: number
-  ) => {
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 

@@ -1,5 +1,5 @@
-import { Typography, Button, TextField, Box } from "@material-ui/core";
-import DoneIcon from "@material-ui/icons/Done";
+import { Typography, Button, TextField, Box } from "@mui/material";
+import DoneIcon from "@mui/icons-material/Done";
 import { useForm, Controller } from "react-hook-form";
 import { Answer, InterviewQuestionSet } from "../../types/interview";
 import GradeToggle from "components/interview/GradeToggle";

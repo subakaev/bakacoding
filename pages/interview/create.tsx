@@ -1,8 +1,8 @@
 import { getLayout } from "components/layouts/Layout";
-import { Paper, Box, Button } from "@material-ui/core";
+import { Paper, Box, Button } from "@mui/material";
 import InterviewQuestionSetsForm from "components/interview/InterviewQuestionSetsForm";
 import Link from "next/link";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const CreateInterviewPage = (): JSX.Element => {
   return (

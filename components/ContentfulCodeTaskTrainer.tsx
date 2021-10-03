@@ -10,7 +10,7 @@ import {
   CardActions,
   Typography,
   CircularProgress,
-} from "@material-ui/core";
+} from "@mui/material";
 import MarkdownText from "./markdown/MarkdownText";
 import { getEntryById } from "lib/contentful";
 import CodeTaskSolution from "./CodeTaskSolution";
