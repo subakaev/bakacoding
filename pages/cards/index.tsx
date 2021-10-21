@@ -76,7 +76,7 @@ const CardsIndex = (): JSX.Element => {
         disabled={loading}
       />
 
-      <Box p={2} display="flex" alignItems="center" flexDirection="column">
+      <Box py={2} display="flex" alignItems="center" flexDirection="column">
         {loading && <CircularProgress />}
         {!loading && (
           <>

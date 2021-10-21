@@ -28,8 +28,13 @@ const TagsFilter = ({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Box display="flex" alignItems="center">
-        <Box flexGrow={1}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column", sm: "row" },
+          alignItems: "center",
+        }}>
+        <Box sx={{ flexGrow: 1, width: "100%" }}>
           <AutocompleteInput
             name="tags"
             control={control}
@@ -37,7 +42,7 @@ const TagsFilter = ({
             disabled={disabled}
           />
         </Box>
-        <Box ml={3}>
+        <Box sx={{ marginLeft: (theme) => ({ sm: theme.spacing(3) }) }}>
           <Button
             type="submit"
             color="primary"

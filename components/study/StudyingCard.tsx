@@ -9,9 +9,7 @@ import {
   CardHeader,
   CardContent,
   CardActions,
-  Theme,
 } from "@mui/material";
-import { makeStyles } from "@mui/styles";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MarkdownText from "components/markdown/MarkdownText";
 import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
@@ -22,33 +20,6 @@ import axios from "axios";
 import { MemoryCardAttemptType } from "types/MemoryCardHistoryItem";
 import { MemoryCardsStudyingHistory } from "types/study";
 import { useSession } from "next-auth/client";
-
-const useStyles = makeStyles((theme: Theme) => ({
-  cardRoot: {
-    minWidth: 500,
-  },
-  cardTitle: {
-    fontSize: 10,
-  },
-  failed: {
-    background: theme.palette.error.main,
-    "&:hover": {
-      background: theme.palette.error.dark,
-    },
-  },
-  warning: {
-    background: theme.palette.warning.main,
-    "&:hover": {
-      background: theme.palette.warning.dark,
-    },
-  },
-  success: {
-    background: theme.palette.success.main,
-    "&:hover": {
-      background: theme.palette.success.dark,
-    },
-  },
-}));
 
 interface MemoryCardItemProps {
   card: MemoryCard;
@@ -65,7 +36,6 @@ const StudyingCard = ({
   totalCardsLength,
   onComplete,
 }: MemoryCardItemProps): JSX.Element => {
-  const classes = useStyles();
   const [loading, setLoading] = useState(false);
   const [session] = useSession();
 
@@ -95,9 +65,9 @@ const StudyingCard = ({
   };
 
   return (
-    <Card className={classes.cardRoot}>
+    <Card sx={{ width: "100%" }}>
       <CardHeader
-        classes={{ title: classes.cardTitle }}
+        sx={{ "& .MuiTypography-root": { fontSize: 10 } }}
         title={`#${card._id}`}
         action={
           <Typography variant="body2">
@@ -127,7 +97,15 @@ const StudyingCard = ({
           onClick={getHandler("failed")}
           color="primary"
           variant="contained"
-          className={classes.failed}
+          sx={{
+            background: (theme) => theme.palette.error.main,
+            "&:hover": (theme) => ({
+              background: theme.palette.error.dark,
+            }),
+            "& .MuiButton-startIcon": {
+              display: { xs: "none", sm: "inherit" },
+            },
+          }}
           disabled={loading}
           startIcon={<SentimentVeryDissatisfiedIcon />}>
           Failed
@@ -136,7 +114,15 @@ const StudyingCard = ({
           onClick={getHandler("warning")}
           color="primary"
           variant="contained"
-          className={classes.warning}
+          sx={{
+            background: (theme) => theme.palette.warning.main,
+            "&:hover": (theme) => ({
+              background: theme.palette.warning.dark,
+            }),
+            "& .MuiButton-startIcon": {
+              display: { xs: "none", sm: "inherit" },
+            },
+          }}
           disabled={loading}
           startIcon={<SentimentDissatisfiedIcon />}>
           Warning
@@ -145,7 +131,15 @@ const StudyingCard = ({
           onClick={getHandler("success")}
           color="primary"
           variant="contained"
-          className={classes.success}
+          sx={{
+            background: (theme) => theme.palette.success.main,
+            "&:hover": (theme) => ({
+              background: theme.palette.success.dark,
+            }),
+            "& .MuiButton-startIcon": {
+              display: { xs: "none", sm: "inherit" },
+            },
+          }}
           disabled={loading}
           startIcon={<SentimentSatisfiedIcon />}>
           Success
