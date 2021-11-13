@@ -18,6 +18,11 @@ import { Entry } from "contentful";
 
 const CodingCard = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const entry = props.entry;
+
+  if (!entry) {
+    return "Loading...";
+  }
+
   return (
     <Container maxWidth="xl">
       <Card>
