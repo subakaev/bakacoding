@@ -1,81 +1,19 @@
-import { getLayout } from "components/layouts/Layout";
-import { useForm, Controller } from "react-hook-form";
+import { getLayout } from "components/layouts/CodingCardsLayout";
+import { Button, Typography, Box, Alert } from "@mui/material";
+import CodingCardsFilter from "components/coding-cards/CodingCardsFilter";
 import {
-  Select,
-  MenuItem,
-  Button,
-  FormControl,
-  InputLabel,
-  Typography,
-  Container,
-  Chip,
-  Link as MuiLink,
-  Card,
-  CardHeader,
-  CardContent,
-  CardActions,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  AccordionActions,
-} from "@mui/material";
-import _ from "lodash";
-import { getContentfulClient } from "lib/contentful";
-import { Entry } from "contentful";
-import { useState } from "react";
-import MarkdownText from "components/markdown/MarkdownText";
-
-enum Difficulty {
-  All = "All",
-  Easy = "Easy",
-  Medium = "Medium",
-  Hard = "Hard",
-}
-
-interface FormValues {
-  difficulty: Difficulty;
-}
-
-interface CodingCardSolutionFields {
-  solution: string;
-  spaceComplexity: string;
-  timeComplexity: string;
-  title: string;
-}
-
-interface CodingCardFields {
-  description: string;
-  difficulty: Difficulty;
-  hints: string[];
-  link: string;
-  slug: string;
-  solutions: Entry<CodingCardSolutionFields>[];
-  title: string;
-}
+  CodingCardsStateStatus,
+  useCodingCardsContext,
+} from "components/coding-cards/CodingCardsContext";
+import { useRouter } from "next/router";
 
 const CodingCards = () => {
+  /*
   const [cardIds, setCardIds] = useState<string[]>([]);
   const [cardIndex, setCardIndex] = useState(-1);
   const [entry, setEntry] = useState<Entry<CodingCardFields> | null>(null);
-
-  const { handleSubmit, control, formState } = useForm<FormValues>({
-    defaultValues: { difficulty: Difficulty.All },
-  });
-
-  const onSubmit = async (values: FormValues) => {
-    const client = getContentfulClient();
-
-    const entries = await client.getEntries<Entry<never>>({
-      content_type: "codingTask",
-      select: "sys.id",
-      ...(values.difficulty !== Difficulty.All && {
-        "fields.difficulty": values.difficulty,
-      }),
-    });
-
-    setCardIds(_.shuffle(entries.items.map((item) => item.sys.id)));
-    setCardIndex(0);
-  };
+  const [codingCard, setCodingCard] = useState<CodingCard | null>(null);
+  const [saving, setSaving] = useState(false);
 
   const pickCard = async () => {
     const client = getContentfulClient();
@@ -84,51 +22,90 @@ const CodingCards = () => {
 
     const entry = await client.getEntry<CodingCardFields>(cardId);
 
+    console.log(entry);
+
+    const response = await axios.get(`/api/coding-cards/${cardId}`);
+
+    console.log("card");
+
+    if (response.data != null) {
+      setCodingCard(response.data);
+    }
+
     setEntry(entry);
 
     setCardIndex((idx) => idx + 1);
   };
 
+  const updateProgress = async (result: MemoryCardAttemptType) => {
+    try {
+      setSaving(true);
+      if (codingCard == null) {
+        const response = await axios.post("/api/coding-cards", {
+          entryId: entry?.sys.id,
+          result,
+        });
+      } else {
+        const response = await axios.put(
+          `/api/coding-cards/${codingCard._id}`,
+          { result }
+        );
+      }
+      setSaving(false);
+      console.log("done");
+    } catch {
+      setSaving(false);
+      console.log("error");
+    }
+  };
+
+  const failedHandler = async () => {
+    await updateProgress("failed");
+  };
+
+  const warningHandler = async () => {
+    await updateProgress("warning");
+  };
+
+  const successHandler = async () => {
+    await updateProgress("success");
+  };*/
+
+  const { state } = useCodingCardsContext();
+
+  const router = useRouter();
+
+  const studyClickHandler = () => {
+    router.push(`/cards/${state.nextSlug}`);
+  };
+
   return (
-    <div>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Controller
-          name="difficulty"
-          control={control}
-          render={({ field }) => {
-            return (
-              <FormControl>
-                <InputLabel id="difficulty-select-label">Difficulty</InputLabel>
-                <Select
-                  {...field}
-                  size="small"
-                  id="difficulty-select"
-                  labelId="difficulty-select-label"
-                  label="Difficulty">
-                  {Object.values(Difficulty).map((difficulty) => (
-                    <MenuItem key={difficulty} value={difficulty}>
-                      {_.capitalize(difficulty)}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            );
-          }}
-        />
-        <Button
-          type="submit"
-          variant="contained"
-          disabled={formState.isSubmitting}>
-          Apply
-        </Button>
-      </form>
+    <Box
+      sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <CodingCardsFilter />
+      <Box sx={{ pt: 3, textAlign: "center" }}>
+        {state.status === CodingCardsStateStatus.Loaded && (
+          // TODO display hurray message if no cards to study
+          <>
+            <Typography sx={{ pb: 2 }}>
+              You have {state.slugs.length} cards to study
+            </Typography>
+            <Button
+              onClick={studyClickHandler}
+              variant="contained"
+              size="large"
+              disabled={state.slugs.length === 0}>
+              Study
+            </Button>
+          </>
+        )}
 
-      <Typography>{cardIds.length} cards found</Typography>
-      <Button variant="contained" onClick={pickCard}>
-        Pick random card
-      </Button>
+        {state.status === CodingCardsStateStatus.Error && (
+          <Alert severity="error">An error occurred when loading cards</Alert>
+        )}
+      </Box>
 
-      {!!entry && (
+      {/* {!!entry && (
         <Container maxWidth="xl">
           <Card>
             <CardHeader title={entry.fields.title} />
@@ -138,7 +115,7 @@ const CodingCards = () => {
                 Open
               </MuiLink>
               <Typography>Hints</Typography>
-              {entry.fields.hints.map((hint, index) => (
+              {entry.fields.hints?.map((hint, index) => (
                 <Accordion key={hint}>
                   <AccordionSummary>
                     <Typography>Show hint {index + 1}</Typography>
@@ -167,14 +144,14 @@ const CodingCards = () => {
               ))}
             </CardContent>
             <CardActions>
-              <Button>Fail</Button>
-              <Button>Keep</Button>
-              <Button>Success</Button>
+              <Button onClick={failedHandler}>Fail</Button>
+              <Button onClick={warningHandler}>Keep</Button>
+              <Button onClick={successHandler}>Success</Button>
             </CardActions>
           </Card>
         </Container>
-      )}
-    </div>
+      )} */}
+    </Box>
   );
 };
 
