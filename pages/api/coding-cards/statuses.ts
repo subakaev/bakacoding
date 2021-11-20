@@ -8,7 +8,7 @@ import CodingCardModel, { CodingCard } from "lib/db/models/CodingCardModel";
 import { updateCodingCardStudyProgress } from "lib/services/coding-cards-study";
 import mongoose from "mongoose";
 import { getUserIdFromSession } from "lib/api/utils";
-import { getActiveCodingCards } from "lib/db/dao/coding-cards";
+import { getActiveCodingCards, getCodingCards } from "lib/db/dao/coding-cards";
 
 async function codingCardsHandler(
   req: NextApiRequest,
@@ -19,8 +19,6 @@ async function codingCardsHandler(
 
     const { method } = req;
 
-    console.log(req);
-
     const userId = await getUserIdFromSession(req);
 
     switch (method) {
@@ -28,9 +26,16 @@ async function codingCardsHandler(
         console.log(req.query);
 
         // TODO return just slugs here to optimize?
-        const cards = await getActiveCodingCards(userId);
+        const cards = await getCodingCards(userId);
 
-        res.status(200).json(cards);
+        res
+          .status(200)
+          .json(
+            cards.map((card) => ({
+              slug: card.slug,
+              nextRepetitionDat: card.nextRepetitionDate,
+            }))
+          );
         break;
       default:
         res.setHeader("Allow", ["GET"]);

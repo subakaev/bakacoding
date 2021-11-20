@@ -1,76 +1,62 @@
-import {
-  getCardHistoryItemById,
-  updateCardHistoryItem,
-} from "lib/api/cards-history";
 import { NextApiRequest, NextApiResponse } from "next";
 import withAuth from "lib/middlewares/auth-middleware";
-import { updateCardStudyProgress } from "lib/services/study";
-import CodingCardModel from "lib/db/CodingCardModel";
-import mongoose from "mongoose";
 import { updateCodingCardStudyProgress } from "lib/services/coding-cards-study";
+import {
+  getCodingCardDocument,
+  getOrCreateCodingCardDocument,
+} from "lib/db/dao/coding-cards";
+import { getUserIdFromSession } from "lib/api/utils";
+import connectToMongo from "lib/db/connect";
 
 async function codingCardsHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<void> {
   try {
+    await connectToMongo();
+
     const { method } = req;
 
-    const { attemptTypeResult } = req.body;
+    const userId = await getUserIdFromSession(req);
+
+    const slug = String(req.query.id ?? "");
 
     switch (method) {
       case "GET": {
-        console.log(req.query.id);
-        const card = await CodingCardModel.findOne({
-          entryId: req.query.id as string,
-        }).exec();
-
-        console.log(JSON.stringify(card));
+        // TODO to service layer
+        const card = await getCodingCardDocument({ userId, slug });
 
         res.status(200).json(card);
 
         break;
       }
       case "PUT":
-        const card = await CodingCardModel.findOne({
-          _id: new mongoose.Types.ObjectId(req.query.id as string),
-        }).exec();
+        // TODO move to service layer
+        const cardDocument = await getOrCreateCodingCardDocument({
+          slug,
+          userId,
+        });
 
-        // const historyItem = await getCardHistoryItemById(
-        //   new ObjectId(req.query.id as string)
-        // );
-
-        if (card == null) {
-          res.status(400).json({
-            errorMessage: `Cannot find history item with id=${req.query.id}`,
-          });
-          return;
-        }
-
-        const updatedItem = updateCodingCardStudyProgress(
-          card,
-          card.userId,
-          card.entryId,
+        const result = updateCodingCardStudyProgress(
+          cardDocument.attempts,
+          cardDocument.progress,
+          cardDocument.repetitionPeriod,
           req.body.result
         );
 
-        card.set({ ...updatedItem });
+        cardDocument.set({ ...result });
 
-        const saved = await card.save();
-
-        // const result = await updateCardHistoryItem(
-        //   historyItem._id,
-        //   updatedItem
-        // );
+        const saved = await cardDocument.save();
 
         res.status(200).json(saved);
 
         break;
       default:
-        res.setHeader("Allow", ["PUT"]);
+        res.setHeader("Allow", ["GET", "PUT"]);
         res.status(405).end(`Method ${method} Not Allowed`);
     }
   } catch (e) {
+    console.error(e);
     res.status(500).end("Internal Server error");
   }
 }

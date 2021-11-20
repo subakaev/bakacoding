@@ -9,16 +9,23 @@ import {
   useCodingCardsContext,
 } from "./CodingCardsContext";
 import { CodingCardFields, Difficulty } from "types/contentful/CodingCard";
+import { CodingCard } from "lib/db/models/CodingCardModel";
+
+enum CardType {
+  All = "All",
+  Pending = "Pending",
+}
 
 interface FormValues {
   difficulty: Difficulty;
+  type: CardType;
 }
 
 const CodingCardsFilter = () => {
   const { dispatch } = useCodingCardsContext();
 
   const { handleSubmit, control, formState } = useForm<FormValues>({
-    defaultValues: { difficulty: Difficulty.All },
+    defaultValues: { difficulty: Difficulty.All, type: CardType.Pending },
   });
 
   const onSubmit = async (values: FormValues) => {
@@ -39,14 +46,41 @@ const CodingCardsFilter = () => {
       console.log(entries);
 
       // TODO move to lib
-      const cards = await axios.get("/api/coding-cards?active=true");
+      const response = await axios.get("/api/coding-cards/statuses");
+      console.log(response);
+      // const cards =
+      //   values.type === CardType.Pending
+      //     ? await axios.get("/api/coding-cards?active=true")
+      //     : { data: [] };
 
-      console.log(cards);
+      // const set = new Set(cards.data.map((c: CodingCard) => c.slug));
+
+      // console.log(cards);
+      const map: Record<string, Date> = response.data.reduce(
+        (
+          acc: Record<string, Date>,
+          { slug, nextRepetitionDate }: CodingCard
+        ) => {
+          acc[slug] = new Date(nextRepetitionDate);
+          return acc;
+        },
+        {}
+      );
+
+      const now = new Date();
 
       dispatch({
         type: CodingCardsActionType.CARDS_LOADED,
         payload: {
-          slugs: entries.items.map((item) => item.fields.slug),
+          slugs: entries.items
+            .map((item) => item.fields.slug)
+            .filter((s) => {
+              if (values.type === CardType.All) {
+                return true;
+              }
+
+              return !map[s] || map[s] > now;
+            }),
           filter: values,
         },
       });
@@ -74,6 +108,30 @@ const CodingCardsFilter = () => {
                 {Object.values(Difficulty).map((difficulty) => (
                   <MenuItem key={difficulty} value={difficulty}>
                     {_.capitalize(difficulty)}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          );
+        }}
+      />
+      <Controller
+        name="type"
+        control={control}
+        render={({ field }) => {
+          return (
+            <FormControl>
+              <InputLabel id="card-type-select-label">Card type</InputLabel>
+              <Select
+                {...field}
+                sx={{ width: 200 }}
+                size="small"
+                id="card-type-select"
+                labelId="card-type-select-label"
+                label="Card type">
+                {Object.values(CardType).map((value) => (
+                  <MenuItem key={value} value={value}>
+                    {_.capitalize(value)}
                   </MenuItem>
                 ))}
               </Select>

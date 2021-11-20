@@ -8,7 +8,7 @@ import {
 import _ from "lodash";
 import { MemoryCardStudyData } from "types/study";
 import { DateTime } from "luxon";
-import CodingCardModel, { CodingCard } from "lib/db/CodingCardModel";
+import CodingCardModel, { CodingCard } from "lib/db/models/CodingCardModel";
 import mongoose from "mongoose";
 
 // async function getCardsHistoryItemsForUserCachedByCardId(
@@ -68,32 +68,44 @@ const maxRepetitions: Record<RepetitionPeriod, number> = {
 };
 
 export function updateCodingCardStudyProgress(
-  item: CodingCard | null,
-  userId: mongoose.Types.ObjectId,
-  entryId: string,
+  attempts: { failed: number; warning: number; success: number },
+  progress: number,
+  repetitionPeriod: RepetitionPeriod,
   attemptTypeResult: MemoryCardAttemptType
-): Omit<CodingCard, "_id"> {
-  const result: Omit<CodingCard, "_id"> = item ?? {
-    entryId,
-    userId,
+): Pick<
+  CodingCard,
+  | "attempts"
+  | "progress"
+  | "lastAttemptType"
+  | "nextRepetitionDate"
+  | "repetitionPeriod"
+  | "lastAttemptDate"
+> {
+  const now = DateTime.utc();
+
+  const result: Pick<
+    CodingCard,
+    | "attempts"
+    | "progress"
+    | "lastAttemptType"
+    | "nextRepetitionDate"
+    | "repetitionPeriod"
+    | "lastAttemptDate"
+  > = {
+    attempts: { ...attempts },
+    progress,
     lastAttemptType: attemptTypeResult,
-    repetitionPeriod: "daily",
-    progress: 0,
-    nextRepetitionDate: new Date(),
-    attempts: {
-      failed: 0,
-      success: 0,
-      warning: 0,
-    },
+    repetitionPeriod,
+    nextRepetitionDate: now.toJSDate(),
+    lastAttemptDate: now.toJSDate(),
   };
 
-  result.lastAttemptType = attemptTypeResult;
   result.attempts[attemptTypeResult] += 1;
 
   if (attemptTypeResult === "failed") {
     result.progress = 0;
     result.repetitionPeriod = "daily";
-    result.nextRepetitionDate = DateTime.utc().plus({ days: 1 }).toJSDate();
+    result.nextRepetitionDate = now.plus({ days: 1 }).toJSDate();
   } else if (attemptTypeResult === "success") {
     result.progress += 1;
 
@@ -105,6 +117,8 @@ export function updateCodingCardStudyProgress(
 
     result.nextRepetitionDate = getNextRepetitionDate(result.repetitionPeriod);
   }
+
+  console.log(result);
 
   return result;
 }

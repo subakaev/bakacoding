@@ -6,12 +6,28 @@ import {
 
 const CODING_CARD_SCHEMA_NAME = "CodingCard";
 
-const CodingCardSchema = new mongoose.Schema({
+export interface CodingCard {
+  _id: mongoose.Types.ObjectId;
+  userId: mongoose.Types.ObjectId;
+  slug: string;
+  attempts: {
+    failed: number;
+    warning: number;
+    success: number;
+  };
+  lastAttemptType: MemoryCardAttemptType;
+  progress: number;
+  repetitionPeriod: RepetitionPeriod;
+  nextRepetitionDate: Date;
+  lastAttemptDate: Date;
+}
+
+const CodingCardSchema = new mongoose.Schema<CodingCard>({
   userId: {
-    type: mongoose.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
-  entryId: {
+  slug: {
     type: String,
     required: true,
   },
@@ -48,24 +64,13 @@ const CodingCardSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
+  lastAttemptDate: {
+    type: Date,
+    required: true,
+  },
 });
 
-export interface CodingCard {
-  _id: mongoose.Types.ObjectId;
-  userId: mongoose.Types.ObjectId;
-  entryId: string;
-  attempts: {
-    failed: number;
-    warning: number;
-    success: number;
-  };
-  lastAttemptType: MemoryCardAttemptType;
-  progress: number;
-  repetitionPeriod: RepetitionPeriod;
-  nextRepetitionDate: Date;
-}
-
-const CodingCardModel =
+const CodingCardModel: mongoose.Model<CodingCard> =
   mongoose.models[CODING_CARD_SCHEMA_NAME] ||
   mongoose.model(CODING_CARD_SCHEMA_NAME, CodingCardSchema, "coding-cards");
 
